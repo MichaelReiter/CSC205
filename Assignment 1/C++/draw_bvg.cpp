@@ -10,6 +10,7 @@
 #include "colourRGB.h"
 #include "bvg.h"
 #include "png_canvas.h"
+#include "stdlib.h"
 
 using namespace std;
 
@@ -25,20 +26,72 @@ public:
 			for (int x = 0; x < width; x++)
 				canvas[x][y] = background_colour;
 	}
+
 	virtual void render_line(Vector2d endpoint1, Vector2d endpoint2, ColourRGB colour, int thickness){
 		cout << "Line " << endpoint1 << endpoint2 << colour << thickness << endl;
+		int F = 0;
+		int x = endpoint1.y;
+		int y = endpoint1.y;
+		Vector2d L = endpoint2 - endpoint1;
+
+		while (x <= endpoint2.x) {
+			// draw points
+			canvas[x][y] = colour;
+			if (abs(F + L.y) < abs(F + L.y - L.x)) {
+				x += 1;
+				F += L.y;
+			} else {
+				x += 1;
+				y += 1;
+				F += (L.y - L.x);
+			}
+		}
 	}
+
 	virtual void render_circle(Vector2d center, int radius, ColourRGB line_colour, int line_thickness){
 		cout << "Circle " << center << radius << line_colour << line_thickness << endl;
+		int F = 0;
+		int x = 0;
+		int y = radius;
+
+		while (x <= y) {
+			// draw points
+			canvas[x + center.x][y + center.y] = line_colour;
+			canvas[y + center.x][x + center.y] = line_colour;
+			canvas[-x + center.x][y + center.y] = line_colour;
+			canvas[-y + center.x][x + center.y] = line_colour;
+			canvas[x + center.x][-y + center.y] = line_colour;
+			canvas[y + center.x][-x + center.y] = line_colour;
+			canvas[-x + center.x][-y + center.y] = line_colour;
+			canvas[-y + center.x][-x + center.y] = line_colour;
+
+			if (abs(F + 2*x + 1) < abs(F + 2*(x-y) + 2)) {
+				x += 1;
+				F += (2*x + 1);
+			} else {
+				x += 1;
+				y -= 1;
+				F += (2*(x-y) + 2);
+			}
+		}
 	}
+
 	virtual void render_filledcircle(Vector2d center, int radius, ColourRGB line_colour, int line_thickness, ColourRGB fill_colour){
 		cout << "Filled Circle " << center << radius << line_colour << line_thickness << fill_colour << endl;
+
+
 	}
+
 	virtual void render_triangle(Vector2d point1, Vector2d point2, Vector2d point3, ColourRGB line_colour, int line_thickness, ColourRGB fill_colour){
 		cout << "Triangle " << point1 << point2 << point3 << line_colour << line_thickness << fill_colour << endl;
+
+
 	}
+
 	virtual void render_gradient_triangle(Vector2d point1, Vector2d point2, Vector2d point3, ColourRGB line_colour, int line_thickness, ColourRGB colour1, ColourRGB colour2, ColourRGB colour3){
 		cout << "Triangle " << point1 << point2 << point3 << line_colour << line_thickness << colour1 << colour2 << colour3 << endl;
+
+
 	}
 	
 	void save_image(string filename){
