@@ -30,20 +30,42 @@ public:
 	virtual void render_line(Vector2d endpoint1, Vector2d endpoint2, ColourRGB colour, int thickness){
 		cout << "Line " << endpoint1 << endpoint2 << colour << thickness << endl;
 		int F = 0;
-		int x = endpoint1.y;
+		int x = endpoint1.x;
 		int y = endpoint1.y;
 		Vector2d L = endpoint2 - endpoint1;
+		// if (L.x < 0 && L.y < 0) {
+		// 	float temp = L.x;
+		// 	L.x = L.y;
+		// 	L.y = temp;
+		// }
+		// cout << endpoint2.x << endl;
 
-		while (x <= endpoint2.x) {
-			// draw points
-			canvas[x][y] = colour;
-			if (abs(F + L.y) < abs(F + L.y - L.x)) {
-				x += 1;
-				F += L.y;
-			} else {
-				x += 1;
-				y += 1;
-				F += (L.y - L.x);
+		// if endpoint2.y < endpoint.x then slope <= 1, so walk along x, else walk along y
+		if (endpoint2.y < endpoint2.x) {
+			while (x < endpoint2.x) {
+				// draw points
+				canvas[x][y] = colour;
+				if (abs(F + L.y) < abs(F + L.y - L.x)) {
+					x += 1;
+					F = F + L.y;
+				} else {
+					x += 1;
+					y += 1;
+					F = F + L.y - L.x;
+				}
+			}
+		} else {
+			while (y <= endpoint2.y) {
+				// draw points
+				canvas[x][y] = colour;
+				if (abs(F + L.x) < abs(F + L.x - L.y)) {
+					y += 1;
+					F = F + L.x;
+				} else {
+					y += 1;
+					x += 1;
+					F = F + L.x - L.y;
+				}
 			}
 		}
 	}
@@ -78,7 +100,34 @@ public:
 
 	virtual void render_filledcircle(Vector2d center, int radius, ColourRGB line_colour, int line_thickness, ColourRGB fill_colour){
 		cout << "Filled Circle " << center << radius << line_colour << line_thickness << fill_colour << endl;
+		int F = 0;
+		int x = 0;
+		int y = radius;
 
+		while (x <= y) {
+			// draw points
+			Vector2d *endpoint1 = new Vector2d((float)(x + center.x), (float)(y + center.y));
+			Vector2d *endpoint2 = new Vector2d((float)(y + center.x), (float)(x + center.y));
+			render_line(*endpoint1, *endpoint2, line_colour, 1);
+			delete endpoint1;
+			delete endpoint2;
+
+			canvas[-x + center.x][y + center.y] = line_colour;
+			canvas[-y + center.x][x + center.y] = line_colour;
+			canvas[x + center.x][-y + center.y] = line_colour;
+			canvas[y + center.x][-x + center.y] = line_colour;
+			canvas[-x + center.x][-y + center.y] = line_colour;
+			canvas[-y + center.x][-x + center.y] = line_colour;
+
+			if (abs(F + 2*x + 1) < abs(F + 2*(x-y) + 2)) {
+				x += 1;
+				F += (2*x + 1);
+			} else {
+				x += 1;
+				y -= 1;
+				F += (2*(x-y) + 2);
+			}
+		}
 
 	}
 
