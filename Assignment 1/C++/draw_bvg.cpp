@@ -22,9 +22,11 @@ public:
 		width = dimensions[0];
 		height = dimensions[1];
 		canvas.initialize_canvas(dimensions[0],dimensions[1]);
-		for (int y = 0; y < height; y++)
-			for (int x = 0; x < width; x++)
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
 				canvas[x][y] = background_colour;
+			}
+		}
 	}
 
 	virtual void render_line(Vector2d endpoint1, Vector2d endpoint2, ColourRGB colour, int thickness){
@@ -32,39 +34,61 @@ public:
 		int F = 0;
 		int x = endpoint1.x;
 		int y = endpoint1.y;
-		Vector2d L = endpoint2 - endpoint1;
-		// if (L.x < 0 && L.y < 0) {
-		// 	float temp = L.x;
-		// 	L.x = L.y;
-		// 	L.y = temp;
-		// }
-		// cout << endpoint2.x << endl;
 
-		// if endpoint2.y < endpoint.x then slope <= 1, so walk along x, else walk along y
-		if (endpoint2.y < endpoint2.x) {
-			while (x < endpoint2.x) {
+		// Eliminate left half of cartesian plane by checking which endpoint is leftmost
+		// This way we are always walking left to right
+		Vector2d startpoint, endpoint;
+		if (endpoint2.x > endpoint1.x) {
+			startpoint = endpoint1;
+			endpoint = endpoint2;
+		} else {
+			startpoint = endpoint2;
+			endpoint = endpoint1;
+		}
+
+		cout << "Start: (" << startpoint.x << ", " << startpoint.y << ")" << endl;
+		cout << "End:   (" << endpoint.x << ", " << endpoint.y << ")" << endl;
+
+		Vector2d L = endpoint - startpoint;
+
+		int upDown;
+		if (endpoint.y - startpoint.y > 0) {
+			upDown = 1;
+		} else {
+			upDown = -1;
+		}
+		cout << "upDown: " << upDown << endl;
+
+		int deltaX = endpoint.x - startpoint.x;
+		int deltaY = endpoint.y - startpoint.y;
+
+		// if deltaX > deltaY then x is long side, so walk along x, else walk along y
+		if (deltaX > deltaY) {
+			cout << "if" << endl;
+			while (x <= endpoint.x) {
 				// draw points
 				canvas[x][y] = colour;
-				if (abs(F + L.y) < abs(F + L.y - L.x)) {
+				if (abs(F + L.y) < abs(F + L.y - upDown*L.x)) {
 					x += 1;
 					F = F + L.y;
 				} else {
 					x += 1;
-					y += 1;
-					F = F + L.y - L.x;
+					y += upDown;
+					F = F + L.y - upDown*L.x;
 				}
 			}
 		} else {
-			while (y <= endpoint2.y) {
+			cout << "else" << endl;
+			while (y <= endpoint.y) {
 				// draw points
 				canvas[x][y] = colour;
-				if (abs(F + L.x) < abs(F + L.x - L.y)) {
+				if (abs(F + L.x) < abs(F + L.x - upDown*L.y)) {
 					y += 1;
 					F = F + L.x;
 				} else {
 					y += 1;
-					x += 1;
-					F = F + L.x - L.y;
+					x += upDown;
+					F = F + L.x - upDown*L.y;
 				}
 			}
 		}
