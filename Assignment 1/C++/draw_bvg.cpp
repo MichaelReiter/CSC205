@@ -31,9 +31,6 @@ public:
 
 	virtual void render_line(Vector2d endpoint1, Vector2d endpoint2, ColourRGB colour, int thickness){
 		cout << "Line " << endpoint1 << endpoint2 << colour << thickness << endl;
-		int F = 0;
-		int x = endpoint1.x;
-		int y = endpoint1.y;
 
 		// Eliminate left half of cartesian plane by checking which endpoint is leftmost
 		// This way we are always walking left to right
@@ -46,10 +43,8 @@ public:
 			endpoint = endpoint1;
 		}
 
-		cout << "Start: (" << startpoint.x << ", " << startpoint.y << ")" << endl;
-		cout << "End:   (" << endpoint.x << ", " << endpoint.y << ")" << endl;
-
-		Vector2d L = endpoint - startpoint;
+		// cout << "Start: (" << startpoint.x << ", " << startpoint.y << ")" << endl;
+		// cout << "End:   (" << endpoint.x << ", " << endpoint.y << ")" << endl;
 
 		int upDown;
 		if (endpoint.y - startpoint.y > 0) {
@@ -57,14 +52,18 @@ public:
 		} else {
 			upDown = -1;
 		}
-		cout << "upDown: " << upDown << endl;
 
-		int deltaX = endpoint.x - startpoint.x;
-		int deltaY = endpoint.y - startpoint.y;
+		int deltaX = abs(endpoint.x - startpoint.x);
+		int deltaY = abs(endpoint.y - startpoint.y);
+
+		Vector2d L = endpoint - startpoint;
+		int F = 0;
+		int x = startpoint.x;
+		int y = startpoint.y;
 
 		// if deltaX > deltaY then x is long side, so walk along x, else walk along y
 		if (deltaX > deltaY) {
-			cout << "if" << endl;
+			cout << "walking " << (upDown > 0 ? "up" : "down") << " along x" << endl;
 			while (x <= endpoint.x) {
 				// draw points
 				canvas[x][y] = colour;
@@ -78,7 +77,7 @@ public:
 				}
 			}
 		} else {
-			cout << "else" << endl;
+			cout << "walking " << (upDown > 0 ? "up" : "down") << " along y" << endl;
 			while (y <= endpoint.y) {
 				// draw points
 				canvas[x][y] = colour;
@@ -158,7 +157,9 @@ public:
 	virtual void render_triangle(Vector2d point1, Vector2d point2, Vector2d point3, ColourRGB line_colour, int line_thickness, ColourRGB fill_colour){
 		cout << "Triangle " << point1 << point2 << point3 << line_colour << line_thickness << fill_colour << endl;
 
-
+		render_line(point1, point2, line_colour, line_thickness);
+		render_line(point2, point3, line_colour, line_thickness);
+		render_line(point3, point1, line_colour, line_thickness);
 	}
 
 	virtual void render_gradient_triangle(Vector2d point1, Vector2d point2, Vector2d point3, ColourRGB line_colour, int line_thickness, ColourRGB colour1, ColourRGB colour2, ColourRGB colour3){
