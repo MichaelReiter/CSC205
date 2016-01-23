@@ -43,8 +43,8 @@ public:
 			endpoint = endpoint1;
 		}
 
-		// cout << "Start: (" << startpoint.x << ", " << startpoint.y << ")" << endl;
-		// cout << "End:   (" << endpoint.x << ", " << endpoint.y << ")" << endl;
+		cout << "Start: (" << startpoint.x << ", " << startpoint.y << ")" << endl;
+		cout << "End:   (" << endpoint.x << ", " << endpoint.y << ")" << endl;
 
 		int upDown;
 		if (endpoint.y - startpoint.y > 0) {
@@ -61,8 +61,8 @@ public:
 		int x = startpoint.x;
 		int y = startpoint.y;
 
-		// if deltaX > deltaY then x is long side, so walk along x, else walk along y
-		if (deltaX > deltaY) {
+		// if deltaX >= deltaY then x is long side, so walk along x, else walk along y
+		if (deltaX >= deltaY) {
 			cout << "walking " << (upDown > 0 ? "up" : "down") << " along x" << endl;
 			while (x <= endpoint.x) {
 				// draw points
@@ -78,15 +78,15 @@ public:
 			}
 		} else {
 			cout << "walking " << (upDown > 0 ? "up" : "down") << " along y" << endl;
-			while (y <= endpoint.y) {
+			while (y != endpoint.y) {
 				// draw points
 				canvas[x][y] = colour;
 				if (abs(F + L.x) < abs(F + L.x - upDown*L.y)) {
-					y += 1;
+					y += upDown;
 					F = F + L.x;
 				} else {
-					y += 1;
-					x += upDown;
+					y += upDown;
+					x += 1;
 					F = F + L.x - upDown*L.y;
 				}
 			}
@@ -129,18 +129,29 @@ public:
 
 		while (x <= y) {
 			// draw points
-			Vector2d *endpoint1 = new Vector2d((float)(x + center.x), (float)(y + center.y));
-			Vector2d *endpoint2 = new Vector2d((float)(y + center.x), (float)(x + center.y));
-			render_line(*endpoint1, *endpoint2, line_colour, 1);
+			Vector2d *endpoint1 = new Vector2d(x + center.x, y + center.y);
+			Vector2d *endpoint2 = new Vector2d(-x + center.x, -y + center.y);
+			render_line(*endpoint1, *endpoint2, fill_colour, 1);
 			delete endpoint1;
 			delete endpoint2;
 
-			canvas[-x + center.x][y + center.y] = line_colour;
-			canvas[-y + center.x][x + center.y] = line_colour;
-			canvas[x + center.x][-y + center.y] = line_colour;
-			canvas[y + center.x][-x + center.y] = line_colour;
-			canvas[-x + center.x][-y + center.y] = line_colour;
-			canvas[-y + center.x][-x + center.y] = line_colour;
+			endpoint1 = new Vector2d(x + center.x, y + center.y);
+			endpoint2 = new Vector2d(y + center.x, x + center.y);
+			render_line(*endpoint1, *endpoint2, fill_colour, 1);
+			delete endpoint1;
+			delete endpoint2;
+
+			endpoint1 = new Vector2d(x + center.x, -y + center.y);
+			endpoint2 = new Vector2d(y + center.x, -x + center.y);
+			render_line(*endpoint1, *endpoint2, fill_colour, 1);
+			delete endpoint1;
+			delete endpoint2;
+
+			endpoint1 = new Vector2d(-x + center.x, -y + center.y);
+			endpoint2 = new Vector2d(-y + center.x, -x + center.y);
+			render_line(*endpoint1, *endpoint2, fill_colour, 1);
+			delete endpoint1;
+			delete endpoint2;
 
 			if (abs(F + 2*x + 1) < abs(F + 2*(x-y) + 2)) {
 				x += 1;
@@ -152,6 +163,8 @@ public:
 			}
 		}
 
+		// Draw a border circle overtop of filled circle
+		render_circle(center, radius, line_colour, line_thickness);
 	}
 
 	virtual void render_triangle(Vector2d point1, Vector2d point2, Vector2d point3, ColourRGB line_colour, int line_thickness, ColourRGB fill_colour){
