@@ -43,9 +43,6 @@ public:
 			endpoint = endpoint1;
 		}
 
-		cout << "Start: (" << startpoint.x << ", " << startpoint.y << ")" << endl;
-		cout << "End:   (" << endpoint.x << ", " << endpoint.y << ")" << endl;
-
 		int upDown;
 		if (endpoint.y - startpoint.y > 0) {
 			upDown = 1;
@@ -63,7 +60,6 @@ public:
 
 		// if deltaX >= deltaY then x is long side, so walk along x, else walk along y
 		if (deltaX >= deltaY) {
-			cout << "walking " << (upDown > 0 ? "up" : "down") << " along x" << endl;
 			while (x <= endpoint.x) {
 				// draw points
 				canvas[x][y] = colour;
@@ -77,7 +73,6 @@ public:
 				}
 			}
 		} else {
-			cout << "walking " << (upDown > 0 ? "up" : "down") << " along y" << endl;
 			while (y != endpoint.y) {
 				// draw points
 				canvas[x][y] = colour;
@@ -130,24 +125,24 @@ public:
 		while (x <= y) {
 			// draw points
 			Vector2d *endpoint1 = new Vector2d(x + center.x, y + center.y);
-			Vector2d *endpoint2 = new Vector2d(-x + center.x, -y + center.y);
+			Vector2d *endpoint2 = new Vector2d(x + center.x, -y + center.y);
 			render_line(*endpoint1, *endpoint2, fill_colour, 1);
 			delete endpoint1;
 			delete endpoint2;
 
-			endpoint1 = new Vector2d(x + center.x, y + center.y);
-			endpoint2 = new Vector2d(y + center.x, x + center.y);
+			endpoint1 = new Vector2d(-x + center.x, y + center.y);
+			endpoint2 = new Vector2d(-x + center.x, -y + center.y);
 			render_line(*endpoint1, *endpoint2, fill_colour, 1);
 			delete endpoint1;
 			delete endpoint2;
 
-			endpoint1 = new Vector2d(x + center.x, -y + center.y);
-			endpoint2 = new Vector2d(y + center.x, -x + center.y);
+			endpoint1 = new Vector2d(y + center.x, x + center.y);
+			endpoint2 = new Vector2d(-y + center.x, x + center.y);
 			render_line(*endpoint1, *endpoint2, fill_colour, 1);
 			delete endpoint1;
 			delete endpoint2;
 
-			endpoint1 = new Vector2d(-x + center.x, -y + center.y);
+			endpoint1 = new Vector2d(y + center.x, -x + center.y);
 			endpoint2 = new Vector2d(-y + center.x, -x + center.y);
 			render_line(*endpoint1, *endpoint2, fill_colour, 1);
 			delete endpoint1;
