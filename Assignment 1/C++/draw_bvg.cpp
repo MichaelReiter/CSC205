@@ -19,9 +19,10 @@ class BVGRenderer: public BVGRendererBase{
 public:
 	virtual void create_canvas(Vector2d dimensions, ColourRGB background_colour, int scale_factor){
 		cout << "Canvas " << dimensions << background_colour << scale_factor << endl;
-		width = dimensions[0];
-		height = dimensions[1];
-		canvas.initialize_canvas(dimensions[0],dimensions[1]);
+		scale = scale_factor;
+		width = dimensions[0] * scale;
+		height = dimensions[1] * scale;
+		canvas.initialize_canvas(width, height);
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 				canvas[x][y] = background_colour;
@@ -36,11 +37,11 @@ public:
 		// This way we are always walking left to right
 		Vector2d startpoint, endpoint;
 		if (endpoint2.x > endpoint1.x) {
-			startpoint = endpoint1;
-			endpoint = endpoint2;
+			startpoint = endpoint1 * scale;
+			endpoint = endpoint2 * scale;
 		} else {
-			startpoint = endpoint2;
-			endpoint = endpoint1;
+			startpoint = endpoint2 * scale;
+			endpoint = endpoint1 * scale;
 		}
 
 		int upDown;
@@ -92,18 +93,18 @@ public:
 		cout << "Circle " << center << radius << line_colour << line_thickness << endl;
 		int F = 0;
 		int x = 0;
-		int y = radius;
+		int y = radius * scale;
 
 		while (x <= y) {
 			// draw points
-			canvas.set_pixel(x + center.x, y + center.y, line_colour);
-			canvas.set_pixel(y + center.x, x + center.y, line_colour);
-			canvas.set_pixel(-x + center.x, y + center.y, line_colour);
-			canvas.set_pixel(-y + center.x, x + center.y, line_colour);
-			canvas.set_pixel(x + center.x, -y + center.y, line_colour);
-			canvas.set_pixel(y + center.x, -x + center.y, line_colour);
-			canvas.set_pixel(-x + center.x, -y + center.y, line_colour);
-			canvas.set_pixel(-y + center.x, -x + center.y, line_colour);
+			canvas.set_pixel(x + center.x * scale, y + center.y * scale, line_colour);
+			canvas.set_pixel(y + center.x * scale, x + center.y * scale, line_colour);
+			canvas.set_pixel(-x + center.x * scale, y + center.y * scale, line_colour);
+			canvas.set_pixel(-y + center.x * scale, x + center.y * scale, line_colour);
+			canvas.set_pixel(x + center.x * scale, -y + center.y * scale, line_colour);
+			canvas.set_pixel(y + center.x * scale, -x + center.y * scale, line_colour);
+			canvas.set_pixel(-x + center.x * scale, -y + center.y * scale, line_colour);
+			canvas.set_pixel(-y + center.x * scale, -x + center.y * scale, line_colour);
 
 			if (abs(F + 2*x + 1) < abs(F + 2*(x-y) + 2)) {
 				x += 1;
@@ -263,7 +264,7 @@ public:
 	}
 private:
 	PNG_Canvas canvas;
-	int width,height;
+	int width, height, scale;
 };
 
 int main(int argc, char** argv){
