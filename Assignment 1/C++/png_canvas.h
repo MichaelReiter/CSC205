@@ -30,7 +30,10 @@ public:
 		return pixels[y*width + x];
 	}
 	
-	void set_pixel(int x, int y, ColourRGB colour){
+	void set_pixel(int x, int y, ColourRGB colour) {
+		if (x < 0 || y < 0 || x >= width || y >= height) {
+			return;
+		}
 		pixels[y*width + x] = colour;
 	}
 	

@@ -62,7 +62,7 @@ public:
 		if (deltaX >= deltaY) {
 			while (x <= endpoint.x) {
 				// draw points
-				canvas[x][y] = colour;
+				canvas.set_pixel(x, y, colour);
 				if (abs(F + L.y) < abs(F + L.y - upDown*L.x)) {
 					x += 1;
 					F = F + L.y;
@@ -75,7 +75,7 @@ public:
 		} else {
 			while (y != endpoint.y) {
 				// draw points
-				canvas[x][y] = colour;
+				canvas.set_pixel(x, y, colour);
 				if (abs(F + L.x) < abs(F + L.x - upDown*L.y)) {
 					y += upDown;
 					F = F + L.x;
@@ -96,14 +96,14 @@ public:
 
 		while (x <= y) {
 			// draw points
-			canvas[x + center.x][y + center.y] = line_colour;
-			canvas[y + center.x][x + center.y] = line_colour;
-			canvas[-x + center.x][y + center.y] = line_colour;
-			canvas[-y + center.x][x + center.y] = line_colour;
-			canvas[x + center.x][-y + center.y] = line_colour;
-			canvas[y + center.x][-x + center.y] = line_colour;
-			canvas[-x + center.x][-y + center.y] = line_colour;
-			canvas[-y + center.x][-x + center.y] = line_colour;
+			canvas.set_pixel(x + center.x, y + center.y, line_colour);
+			canvas.set_pixel(y + center.x, x + center.y, line_colour);
+			canvas.set_pixel(-x + center.x, y + center.y, line_colour);
+			canvas.set_pixel(-y + center.x, x + center.y, line_colour);
+			canvas.set_pixel(x + center.x, -y + center.y, line_colour);
+			canvas.set_pixel(y + center.x, -x + center.y, line_colour);
+			canvas.set_pixel(-x + center.x, -y + center.y, line_colour);
+			canvas.set_pixel(-y + center.x, -x + center.y, line_colour);
 
 			if (abs(F + 2*x + 1) < abs(F + 2*(x-y) + 2)) {
 				x += 1;
@@ -124,8 +124,11 @@ public:
 
 		while (x <= y) {
 			// draw points
-			Vector2d *endpoint1 = new Vector2d(x + center.x, y + center.y);
-			Vector2d *endpoint2 = new Vector2d(x + center.x, -y + center.y);
+			Vector2d *endpoint1;
+			Vector2d *endpoint2;
+
+			endpoint1 = new Vector2d(x + center.x, y + center.y);
+			endpoint2 = new Vector2d(x + center.x, -y + center.y);
 			render_line(*endpoint1, *endpoint2, fill_colour, 1);
 			delete endpoint1;
 			delete endpoint2;
@@ -162,9 +165,35 @@ public:
 		render_circle(center, radius, line_colour, line_thickness);
 	}
 
+	// check if sign of two integers is equal
+	bool equal_signs(int x, int y) {
+		return ((x > 0 && y > 0) || (x < 0 && y < 0));
+	}
+
 	virtual void render_triangle(Vector2d point1, Vector2d point2, Vector2d point3, ColourRGB line_colour, int line_thickness, ColourRGB fill_colour){
 		cout << "Triangle " << point1 << point2 << point3 << line_colour << line_thickness << fill_colour << endl;
 
+		// fill triangle
+		int x0 = min(min(point1.x, point2.x), point3.x);
+		int x1 = max(max(point1.x, point2.x), point3.x);
+		int y0 = min(min(point1.y, point2.y), point3.y);
+		int y1 = max(max(point1.y, point2.y), point3.y);
+
+		float alpha, beta, gamma;
+
+		for (int i = x0; i <= x1; i++) {
+			for (int j = y0; j <= y1; j++) {
+				alpha = ((point2.y - point3.y)*(i - point3.x) + (point3.x - point2.x)*(j - point3.y)) / ((point2.y - point3.y)*(point1.x - point3.x) + (point3.x - point2.x)*(point1.y - point3.y));
+				beta = ((point3.y - point1.y)*(i - point3.x) + (point1.x - point3.x)*(j - point3.y)) / ((point2.y - point3.y)*(point1.x - point3.x) + (point3.x - point2.x)*(point1.y - point3.y));
+				gamma = 1.0 - alpha - beta;
+
+				if (alpha > 0 && beta > 0 && gamma > 0) {
+					canvas.set_pixel(i, j, fill_colour);
+				}
+			}
+		}
+
+		// render outline
 		render_line(point1, point2, line_colour, line_thickness);
 		render_line(point2, point3, line_colour, line_thickness);
 		render_line(point3, point1, line_colour, line_thickness);
