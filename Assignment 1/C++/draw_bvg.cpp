@@ -121,34 +121,34 @@ public:
 		cout << "Filled Circle " << center << radius << line_colour << line_thickness << fill_colour << endl;
 		int F = 0;
 		int x = 0;
-		int y = radius;
+		int y = radius * scale;
 
 		while (x <= y) {
 			// draw points
 			Vector2d *endpoint1;
 			Vector2d *endpoint2;
 
-			endpoint1 = new Vector2d(x + center.x, y + center.y);
-			endpoint2 = new Vector2d(x + center.x, -y + center.y);
-			render_line(*endpoint1, *endpoint2, fill_colour, 1);
+			endpoint1 = new Vector2d(x + center.x * scale, y + center.y * scale);
+			endpoint2 = new Vector2d(x + center.x * scale, -y + center.y * scale);
+			render_line(*endpoint1 / scale, *endpoint2 / scale, fill_colour, 1);
 			delete endpoint1;
 			delete endpoint2;
 
-			endpoint1 = new Vector2d(-x + center.x, y + center.y);
-			endpoint2 = new Vector2d(-x + center.x, -y + center.y);
-			render_line(*endpoint1, *endpoint2, fill_colour, 1);
+			endpoint1 = new Vector2d(-x + center.x * scale, y + center.y * scale);
+			endpoint2 = new Vector2d(-x + center.x * scale, -y + center.y * scale);
+			render_line(*endpoint1 / scale, *endpoint2 / scale, fill_colour, 1);
 			delete endpoint1;
 			delete endpoint2;
 
-			endpoint1 = new Vector2d(y + center.x, x + center.y);
-			endpoint2 = new Vector2d(-y + center.x, x + center.y);
-			render_line(*endpoint1, *endpoint2, fill_colour, 1);
+			endpoint1 = new Vector2d(y + center.x * scale, x + center.y * scale);
+			endpoint2 = new Vector2d(-y + center.x * scale, x + center.y * scale);
+			render_line(*endpoint1 / scale, *endpoint2 / scale, fill_colour, 1);
 			delete endpoint1;
 			delete endpoint2;
 
-			endpoint1 = new Vector2d(y + center.x, -x + center.y);
-			endpoint2 = new Vector2d(-y + center.x, -x + center.y);
-			render_line(*endpoint1, *endpoint2, fill_colour, 1);
+			endpoint1 = new Vector2d(y + center.x * scale, -x + center.y * scale);
+			endpoint2 = new Vector2d(-y + center.x * scale, -x + center.y * scale);
+			render_line(*endpoint1 / scale, *endpoint2 / scale, fill_colour, 1);
 			delete endpoint1;
 			delete endpoint2;
 

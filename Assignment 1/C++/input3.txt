@@ -1,3 +1,3 @@
-Canvas dimensions=(500,500) background_colour=(255,255,255)
+Canvas dimensions=(500,500) background_colour=(255,255,255) scale_factor=1
 
-FilledCircle center=(450,250) radius=100 line_colour=(0,0,0) fill_colour=(255,64,64)
+FilledCircle center=(250,250) radius=100 line_colour=(0,0,0) fill_colour=(255,64,64)
