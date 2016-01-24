@@ -169,23 +169,27 @@ public:
 	virtual void render_triangle(Vector2d point1, Vector2d point2, Vector2d point3, ColourRGB line_colour, int line_thickness, ColourRGB fill_colour){
 		cout << "Triangle " << point1 << point2 << point3 << line_colour << line_thickness << fill_colour << endl;
 
+		Vector2d scaledPoint1 = point1 * scale;
+		Vector2d scaledPoint2 = point2 * scale;
+		Vector2d scaledPoint3 = point3 * scale;
+
 		// Fill triangle
-		int x0 = min(min(point1.x, point2.x), point3.x);
-		int x1 = max(max(point1.x, point2.x), point3.x);
-		int y0 = min(min(point1.y, point2.y), point3.y);
-		int y1 = max(max(point1.y, point2.y), point3.y);
+		int x0 = min(min(scaledPoint1.x, scaledPoint2.x), scaledPoint3.x);
+		int x1 = max(max(scaledPoint1.x, scaledPoint2.x), scaledPoint3.x);
+		int y0 = min(min(scaledPoint1.y, scaledPoint2.y), scaledPoint3.y);
+		int y1 = max(max(scaledPoint1.y, scaledPoint2.y), scaledPoint3.y);
 
 		float lambda1, lambda2, lambda3;
 
-		Vector2d *v = new Vector2d(point2.y - point3.y, point3.x - point2.x);
-		Vector2d *u = new Vector2d(point1.x - point3.x, point1.y - point3.y);
-		Vector2d *w = new Vector2d(point3.y - point1.y, point1.x - point3.x);
+		Vector2d *v = new Vector2d(scaledPoint2.y - scaledPoint3.y, scaledPoint3.x - scaledPoint2.x);
+		Vector2d *u = new Vector2d(scaledPoint1.x - scaledPoint3.x, scaledPoint1.y - scaledPoint3.y);
+		Vector2d *w = new Vector2d(scaledPoint3.y - scaledPoint1.y, scaledPoint1.x - scaledPoint3.x);
 		Vector2d *vector1;
 
 		// Iterate over all pixels in bounding box
 		for (int i = x0; i <= x1; i++) {
 			for (int j = y0; j <= y1; j++) {
-				vector1 = new Vector2d(i - point3.x, j - point3.y);
+				vector1 = new Vector2d(i - scaledPoint3.x, j - scaledPoint3.y);
 
 				lambda1 = v->dot(*vector1) / v->dot(*u);
 				lambda2 = w->dot(*vector1) / v->dot(*u);

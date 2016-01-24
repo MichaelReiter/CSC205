@@ -1,4 +1,3 @@
 Canvas dimensions=(500,500) background_colour=(255,255,255) scale_factor=2
 
-Line from=(100, 100) to=(400,400) colour=(0,0,0)
-Circle center=(250,250) radius=100 line_colour=(0,0,0)
+Triangle point1=(100,400) point2=(200,100) point3=(400,300) line_colour=(0,0,0) fill_colour=(255,64,64)
