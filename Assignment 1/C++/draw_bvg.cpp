@@ -165,35 +165,44 @@ public:
 		render_circle(center, radius, line_colour, line_thickness);
 	}
 
-	// check if sign of two integers is equal
-	bool equal_signs(int x, int y) {
-		return ((x > 0 && y > 0) || (x < 0 && y < 0));
-	}
-
 	virtual void render_triangle(Vector2d point1, Vector2d point2, Vector2d point3, ColourRGB line_colour, int line_thickness, ColourRGB fill_colour){
 		cout << "Triangle " << point1 << point2 << point3 << line_colour << line_thickness << fill_colour << endl;
 
-		// fill triangle
+		// Fill triangle
 		int x0 = min(min(point1.x, point2.x), point3.x);
 		int x1 = max(max(point1.x, point2.x), point3.x);
 		int y0 = min(min(point1.y, point2.y), point3.y);
 		int y1 = max(max(point1.y, point2.y), point3.y);
 
-		float alpha, beta, gamma;
+		float lambda1, lambda2, lambda3;
 
+		Vector2d *v = new Vector2d(point2.y - point3.y, point3.x - point2.x);
+		Vector2d *u = new Vector2d(point1.x - point3.x, point1.y - point3.y);
+		Vector2d *w = new Vector2d(point3.y - point1.y, point1.x - point3.x);
+		Vector2d *vector1;
+
+		// Iterate over all pixels in bounding box
 		for (int i = x0; i <= x1; i++) {
 			for (int j = y0; j <= y1; j++) {
-				alpha = ((point2.y - point3.y)*(i - point3.x) + (point3.x - point2.x)*(j - point3.y)) / ((point2.y - point3.y)*(point1.x - point3.x) + (point3.x - point2.x)*(point1.y - point3.y));
-				beta = ((point3.y - point1.y)*(i - point3.x) + (point1.x - point3.x)*(j - point3.y)) / ((point2.y - point3.y)*(point1.x - point3.x) + (point3.x - point2.x)*(point1.y - point3.y));
-				gamma = 1.0 - alpha - beta;
+				vector1 = new Vector2d(i - point3.x, j - point3.y);
 
-				if (alpha > 0 && beta > 0 && gamma > 0) {
+				lambda1 = v->dot(*vector1) / v->dot(*u);
+				lambda2 = w->dot(*vector1) / v->dot(*u);
+				lambda3 = 1 - lambda1 - lambda2;
+
+				delete vector1;
+
+				if (lambda1 > 0 && lambda2 > 0 && lambda3 > 0) {
 					canvas.set_pixel(i, j, fill_colour);
 				}
 			}
 		}
 
-		// render outline
+		delete v;
+		delete u;
+		delete w;
+
+		// Draw outline
 		render_line(point1, point2, line_colour, line_thickness);
 		render_line(point2, point3, line_colour, line_thickness);
 		render_line(point3, point1, line_colour, line_thickness);
@@ -202,7 +211,51 @@ public:
 	virtual void render_gradient_triangle(Vector2d point1, Vector2d point2, Vector2d point3, ColourRGB line_colour, int line_thickness, ColourRGB colour1, ColourRGB colour2, ColourRGB colour3){
 		cout << "Triangle " << point1 << point2 << point3 << line_colour << line_thickness << colour1 << colour2 << colour3 << endl;
 
+		// Fill triangle
+		int x0 = min(min(point1.x, point2.x), point3.x);
+		int x1 = max(max(point1.x, point2.x), point3.x);
+		int y0 = min(min(point1.y, point2.y), point3.y);
+		int y1 = max(max(point1.y, point2.y), point3.y);
 
+		float lambda1, lambda2, lambda3;
+
+		Vector2d *v = new Vector2d(point2.y - point3.y, point3.x - point2.x);
+		Vector2d *u = new Vector2d(point1.x - point3.x, point1.y - point3.y);
+		Vector2d *w = new Vector2d(point3.y - point1.y, point1.x - point3.x);
+		Vector2d *vector1;
+
+		// Iterate over all pixels in bounding box
+		for (int i = x0; i <= x1; i++) {
+			for (int j = y0; j <= y1; j++) {
+				vector1 = new Vector2d(i - point3.x, j - point3.y);
+
+				lambda1 = v->dot(*vector1) / v->dot(*u);
+				lambda2 = w->dot(*vector1) / v->dot(*u);
+				lambda3 = 1 - lambda1 - lambda2;
+
+				int r = lambda1 * (colour1.r + colour2.r + colour3.r);
+				int g = lambda2 * (colour1.g + colour2.g + colour3.g);
+				int b = lambda3 * (colour1.b + colour2.b + colour3.b);
+
+				ColourRGB *fill_colour = new ColourRGB(r, g, b);
+
+				if (lambda1 > 0 && lambda2 > 0 && lambda3 > 0) {
+					canvas.set_pixel(i, j, *fill_colour);
+				}
+
+				delete vector1;
+				delete fill_colour;
+			}
+		}
+
+		delete v;
+		delete u;
+		delete w;
+
+		// Draw outline
+		render_line(point1, point2, line_colour, line_thickness);
+		render_line(point2, point3, line_colour, line_thickness);
+		render_line(point3, point1, line_colour, line_thickness);
 	}
 	
 	void save_image(string filename){
