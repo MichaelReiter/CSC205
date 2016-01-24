@@ -1,0 +1,6 @@
+Canvas dimensions=(100, 100) background_colour=(64,64,64)
+
+Triangle point1=(10,10) point2=(50,50) point3 = (10,90) line_colour=(255,128,128) line_thickness=2 fill_colour=(255,255,255)
+Triangle point1=(10,10) point2=(25,20) point3 = (90,10) line_colour=(255,255,255) fill_colour=(255,0,0)
+
+

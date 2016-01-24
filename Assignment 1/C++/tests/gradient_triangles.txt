@@ -1,0 +1,4 @@
+Canvas dimensions=(100, 100) background_colour=(64,64,64)
+
+GradientTriangle point1=(10,10) point2=(50,50) point3 = (10,90) line_colour=(255,128,128)
+GradientTriangle point1=(25,10) colour1=(0,0,0) point2=(60,50) colour2=(0,255,255) point3 = (99,1) colour3 = (255,0,255) line_colour=(255,128,128)

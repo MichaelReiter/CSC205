@@ -1,0 +1,3 @@
+Canvas dimensions=(500,500) background_colour=(255,255,255)
+
+Line from=(100, 400) to=(400,200) colour=(0,0,0) thickness=3

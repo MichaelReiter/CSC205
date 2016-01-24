@@ -1,0 +1,6 @@
+Canvas dimensions=(100, 100) background_colour=(64,64,64)
+
+Circle center=(10, 10) radius=5 line_colour=(255,128,128) line_thickness=2
+FilledCircle center=(50, 50) radius=40 line_colour=(255,255,255) line_thickness=1 fill_colour=(255,255,0)
+Circle center=(50, 50) radius=10 line_colour=(0,0,0) line_thickness=2
+

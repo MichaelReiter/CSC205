@@ -64,6 +64,22 @@ public:
 			while (x <= endpoint.x) {
 				// draw points
 				canvas.set_pixel(x, y, colour);
+				if (thickness > 1) {
+
+					Vector2d *newEndpoint1;
+					Vector2d *newEndpoint2;
+
+					int thick = thickness/2;
+					if (thick % 2 == 1) {
+						newEndpoint1 = new Vector2d(x, y + thick);
+						newEndpoint2 = new Vector2d(x, y - thick);
+					}
+
+					
+					render_line(*newEndpoint1, *newEndpoint2, colour, 1);
+					delete newEndpoint1;
+					delete newEndpoint2;
+				}
 				if (abs(F + L.y) < abs(F + L.y - upDown*L.x)) {
 					x += 1;
 					F = F + L.y;
