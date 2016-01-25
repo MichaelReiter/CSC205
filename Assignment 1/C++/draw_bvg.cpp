@@ -129,7 +129,6 @@ public:
 
 		while (x <= y) {
 			// draw points
-
 			if (line_thickness > 1) {
 				int increment = line_thickness/2;
 				Vector2d *newEndpoint1;
@@ -362,9 +361,13 @@ public:
 				lambda2 = w->dot(*vector1) / v->dot(*u);
 				lambda3 = 1 - lambda1 - lambda2;
 
-				int r = lambda1 * (colour1.r + colour2.r + colour3.r);
-				int g = lambda2 * (colour1.g + colour2.g + colour3.g);
-				int b = lambda3 * (colour1.b + colour2.b + colour3.b);
+				int r = lambda1 * colour1.r + lambda2 * colour2.r + lambda3 * colour3.r;
+				int g = lambda2 * colour1.g + lambda2 * colour2.g + lambda3 * colour3.g;
+				int b = lambda1 * colour1.b + lambda2 * colour2.b + lambda3 * colour3.b;
+
+				// int r = lambda1 * (colour1.r + colour2.r + colour3.r);
+				// int g = lambda2 * (colour1.g + colour2.g + colour3.g);
+				// int b = lambda3 * (colour1.b + colour2.b + colour3.b);
 
 				ColourRGB *fill_colour = new ColourRGB(r, g, b);
 
