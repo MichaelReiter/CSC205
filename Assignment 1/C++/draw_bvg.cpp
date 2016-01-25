@@ -129,14 +129,102 @@ public:
 
 		while (x <= y) {
 			// draw points
-			canvas.set_pixel(x + center.x * scale, y + center.y * scale, line_colour);
-			canvas.set_pixel(y + center.x * scale, x + center.y * scale, line_colour);
-			canvas.set_pixel(-x + center.x * scale, y + center.y * scale, line_colour);
-			canvas.set_pixel(-y + center.x * scale, x + center.y * scale, line_colour);
-			canvas.set_pixel(x + center.x * scale, -y + center.y * scale, line_colour);
-			canvas.set_pixel(y + center.x * scale, -x + center.y * scale, line_colour);
-			canvas.set_pixel(-x + center.x * scale, -y + center.y * scale, line_colour);
-			canvas.set_pixel(-y + center.x * scale, -x + center.y * scale, line_colour);
+
+			if (line_thickness > 1) {
+				int increment = line_thickness/2;
+				Vector2d *newEndpoint1;
+				Vector2d *newEndpoint2;
+
+				newEndpoint1 = new Vector2d(x + center.x, y + center.y + increment);
+				if (line_thickness % 2 == 1) {
+					newEndpoint2 = new Vector2d(x + center.x, y + center.y - increment - 1);
+				} else {
+					newEndpoint2 = new Vector2d(x + center.x, y + center.y - increment);
+				}
+				render_line(*newEndpoint1, *newEndpoint2, line_colour, 1);
+				delete newEndpoint1;
+				delete newEndpoint2;
+
+				newEndpoint1 = new Vector2d(y + center.x + increment, x + center.y);
+				if (line_thickness % 2 == 1) {
+					newEndpoint2 = new Vector2d(y + center.x - increment, x + center.y);
+				} else {
+					newEndpoint2 = new Vector2d(y + center.x - increment + 1, x + center.y);
+				}
+				render_line(*newEndpoint1, *newEndpoint2, line_colour, 1);
+				delete newEndpoint1;
+				delete newEndpoint2;
+
+				newEndpoint1 = new Vector2d(-x + center.x, y + center.y + increment);
+				if (line_thickness % 2 == 1) {
+					newEndpoint2 = new Vector2d(-x + center.x, y + center.y - increment - 1);
+				} else {
+					newEndpoint2 = new Vector2d(-x + center.x, y + center.y - increment);
+				}
+				render_line(*newEndpoint1, *newEndpoint2, line_colour, 1);
+				delete newEndpoint1;
+				delete newEndpoint2;
+
+				newEndpoint1 = new Vector2d(-y + center.x + increment, x + center.y);
+				if (line_thickness % 2 == 1) {
+					newEndpoint2 = new Vector2d(-y + center.x - increment, x + center.y);
+				} else {
+					newEndpoint2 = new Vector2d(-y + center.x - increment + 1, x + center.y);
+				}
+				render_line(*newEndpoint1, *newEndpoint2, line_colour, 1);
+				delete newEndpoint1;
+				delete newEndpoint2;
+
+				newEndpoint1 = new Vector2d(x + center.x, -y + center.y + increment);
+				if (line_thickness % 2 == 1) {
+					newEndpoint2 = new Vector2d(x + center.x, -y + center.y - increment - 1);
+				} else {
+					newEndpoint2 = new Vector2d(x + center.x, -y + center.y - increment);
+				}
+				render_line(*newEndpoint1, *newEndpoint2, line_colour, 1);
+				delete newEndpoint1;
+				delete newEndpoint2;
+
+				newEndpoint1 = new Vector2d(y + center.x + increment, -x + center.y);
+				if (line_thickness % 2 == 1) {
+					newEndpoint2 = new Vector2d(y + center.x - increment, -x + center.y);
+				} else {
+					newEndpoint2 = new Vector2d(y + center.x - increment + 1, -x + center.y);
+				}
+				render_line(*newEndpoint1, *newEndpoint2, line_colour, 1);
+				delete newEndpoint1;
+				delete newEndpoint2;
+
+				newEndpoint1 = new Vector2d(-x + center.x, -y + center.y + increment);
+				if (line_thickness % 2 == 1) {
+					newEndpoint2 = new Vector2d(-x + center.x, -y + center.y - increment - 1);
+				} else {
+					newEndpoint2 = new Vector2d(-x + center.x, -y + center.y - increment);
+				}
+				render_line(*newEndpoint1, *newEndpoint2, line_colour, 1);
+				delete newEndpoint1;
+				delete newEndpoint2;
+
+				newEndpoint1 = new Vector2d(-y + center.x + increment, -x + center.y);
+				if (line_thickness % 2 == 1) {
+					newEndpoint2 = new Vector2d(-y + center.x - increment, -x + center.y);
+				} else {
+					newEndpoint2 = new Vector2d(-y + center.x - increment + 1, -x + center.y);
+				}
+				render_line(*newEndpoint1, *newEndpoint2, line_colour, 1);
+				delete newEndpoint1;
+				delete newEndpoint2;
+
+			} else {
+				canvas.set_pixel(x + center.x * scale, y + center.y * scale, line_colour);
+				canvas.set_pixel(y + center.x * scale, x + center.y * scale, line_colour);
+				canvas.set_pixel(-x + center.x * scale, y + center.y * scale, line_colour);
+				canvas.set_pixel(-y + center.x * scale, x + center.y * scale, line_colour);
+				canvas.set_pixel(x + center.x * scale, -y + center.y * scale, line_colour);
+				canvas.set_pixel(y + center.x * scale, -x + center.y * scale, line_colour);
+				canvas.set_pixel(-x + center.x * scale, -y + center.y * scale, line_colour);
+				canvas.set_pixel(-y + center.x * scale, -x + center.y * scale, line_colour);
+			}
 
 			if (abs(F + 2*x + 1) < abs(F + 2*(x-y) + 2)) {
 				x += 1;
