@@ -63,23 +63,23 @@ public:
 		if (deltaX >= deltaY) {
 			while (x <= endpoint.x) {
 				// draw points
-				canvas.set_pixel(x, y, colour);
 				if (thickness > 1) {
-
-					Vector2d *newEndpoint1;
+					int increment = thickness/2;
+					Vector2d *newEndpoint1 = new Vector2d(x, y + increment);
 					Vector2d *newEndpoint2;
 
-					int thick = thickness/2;
-					if (thick % 2 == 1) {
-						newEndpoint1 = new Vector2d(x, y + thick);
-						newEndpoint2 = new Vector2d(x, y - thick);
+					if (thickness % 2 == 1) {
+						newEndpoint2 = new Vector2d(x, y - increment - 1);
+					} else {
+						newEndpoint2 = new Vector2d(x, y - increment);
 					}
-
-					
 					render_line(*newEndpoint1, *newEndpoint2, colour, 1);
 					delete newEndpoint1;
 					delete newEndpoint2;
+				} else {
+					canvas.set_pixel(x, y, colour);
 				}
+
 				if (abs(F + L.y) < abs(F + L.y - upDown*L.x)) {
 					x += 1;
 					F = F + L.y;
@@ -92,7 +92,23 @@ public:
 		} else {
 			while (y != endpoint.y) {
 				// draw points
-				canvas.set_pixel(x, y, colour);
+				if (thickness > 1) {
+					int increment = thickness/2;
+					Vector2d *newEndpoint1 = new Vector2d(x + increment, y);
+					Vector2d *newEndpoint2;
+
+					if (thickness % 2 == 1) {
+						newEndpoint2 = new Vector2d(x - increment, y);
+					} else {
+						newEndpoint2 = new Vector2d(x - increment + 1, y);
+					}
+					render_line(*newEndpoint1, *newEndpoint2, colour, 1);
+					delete newEndpoint1;
+					delete newEndpoint2;
+				} else {
+					canvas.set_pixel(x, y, colour);
+				}
+
 				if (abs(F + L.x) < abs(F + L.x - upDown*L.y)) {
 					y += upDown;
 					F = F + L.x;
