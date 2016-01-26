@@ -19,7 +19,7 @@ class BVGRenderer: public BVGRendererBase{
 public:
 	virtual void create_canvas(Vector2d dimensions, ColourRGB background_colour, int scale_factor){
 		cout << "Canvas " << dimensions << background_colour << scale_factor << endl;
-		scale = scale_factor;
+		scale = scale_factor * 2;
 		width = dimensions[0] * scale;
 		height = dimensions[1] * scale;
 		canvas.initialize_canvas(width, height);
@@ -365,10 +365,6 @@ public:
 				int g = lambda2 * colour1.g + lambda2 * colour2.g + lambda3 * colour3.g;
 				int b = lambda1 * colour1.b + lambda2 * colour2.b + lambda3 * colour3.b;
 
-				// int r = lambda1 * (colour1.r + colour2.r + colour3.r);
-				// int g = lambda2 * (colour1.g + colour2.g + colour3.g);
-				// int b = lambda3 * (colour1.b + colour2.b + colour3.b);
-
 				ColourRGB *fill_colour = new ColourRGB(r, g, b);
 
 				if (lambda1 > 0 && lambda2 > 0 && lambda3 > 0) {
@@ -391,6 +387,40 @@ public:
 	}
 	
 	void save_image(string filename){
+		bool enable_antialiasing = false;
+
+		if (enable_antialiasing) {
+			PNG_Canvas supersample_canvas;
+			supersample_canvas.initialize_canvas(width/2, height/2);
+
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++) {
+					int r1 = canvas.get_pixel(x, y).r;
+					int r2 = canvas.get_pixel(x+1, y).r;
+					int r3 = canvas.get_pixel(x, y+1).r;
+					int r4 = canvas.get_pixel(x+1, y+1).r;
+					int new_r = (r1 + r2 + r3 + r4) / 4;
+
+					int g1 = canvas.get_pixel(x, y).g;
+					int g2 = canvas.get_pixel(x+1, y).g;
+					int g3 = canvas.get_pixel(x, y+1).g;
+					int g4 = canvas.get_pixel(x+1, y+1).g;
+					int new_g = (g1 + g2 + g3 + g4) / 4;
+
+					int b1 = canvas.get_pixel(x, y).b;
+					int b2 = canvas.get_pixel(x+1, y).b;
+					int b3 = canvas.get_pixel(x, y+1).b;
+					int b4 = canvas.get_pixel(x+1, y+1).b;
+					int new_b = (b1 + b2 + b3 + b4) / 4;
+
+					ColourRGB *new_colour = new ColourRGB(new_r, new_g, new_b);
+					supersample_canvas[x/2][y/2] = *new_colour;
+					delete new_colour;
+				}
+			}
+			
+			canvas = supersample_canvas;
+		}
 		canvas.save_image(filename);
 	}
 private:

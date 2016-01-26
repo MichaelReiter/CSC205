@@ -18,15 +18,15 @@ The FilledCircle command correctly renders filled circles with line thickness 1.
 10
 The Triangle command correctly renders solid-filled triangles with line thickness 1.
 
+10
+The GradientTriangle command correctly renders gradient-filled triangles with line thickness 1.
+
 5
 The scale factor attribute of the Canvas command functions correctly with scale factors greater than 1.
 
 
 
 SORT OF WORKS
-
-10
-The GradientTriangle command correctly renders gradient-filled triangles with line thickness 1.
 
 5
 The thickness and line thickness attributes for all shapes function correctly.
