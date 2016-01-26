@@ -31,9 +31,5 @@ SORT OF WORKS
 5
 The thickness and line thickness attributes for all shapes function correctly.
 
-
-
-TODO
-
 5
 An antialiasing technique is applied to all rendering operations.

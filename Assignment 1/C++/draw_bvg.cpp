@@ -362,7 +362,7 @@ public:
 				lambda3 = 1 - lambda1 - lambda2;
 
 				int r = lambda1 * colour1.r + lambda2 * colour2.r + lambda3 * colour3.r;
-				int g = lambda2 * colour1.g + lambda2 * colour2.g + lambda3 * colour3.g;
+				int g = lambda1 * colour1.g + lambda2 * colour2.g + lambda3 * colour3.g;
 				int b = lambda1 * colour1.b + lambda2 * colour2.b + lambda3 * colour3.b;
 
 				ColourRGB *fill_colour = new ColourRGB(r, g, b);
@@ -418,7 +418,7 @@ public:
 					delete new_colour;
 				}
 			}
-			
+
 			canvas = supersample_canvas;
 		}
 		canvas.save_image(filename);
