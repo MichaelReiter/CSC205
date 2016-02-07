@@ -91,7 +91,7 @@ private:
 			cursor_direction.x = -1;
 		} else if (key == SDLK_RIGHT) {
 			cursor_direction.x = 1;
-		} else if (key == SDLK_r && can_shoot) {
+		} else if (key == SDLK_SPACE && can_shoot) {
 			fire_shot(cursor_position);
 		}
 	}
@@ -118,11 +118,14 @@ private:
 	}
 
 	void fire_shot(Vector2d target) {
-		cout << "Shot fired toward (" << (int)target.x << ", " << (int)target.y << ")" << endl;
 		shot_position = Vector2d(CANVAS_SIZE_X/2, CANVAS_SIZE_Y - 25);
 		shot_direction = cursor_position - shot_position;
 		explosion_position = cursor_position;
 		can_shoot = false;
+	}
+
+	void draw_explosion(Vector2d position) {
+
 	}
 
 	void draw(SDL_Renderer *renderer, float frame_delta_ms) {
@@ -140,12 +143,12 @@ private:
 			Vector2d new_position = shot_position + shot_position_delta*shot_direction.normalize();
 			shot_position = new_position;
 			filledCircleRGBA(renderer, shot_position.x, shot_position.y, SHOT_RADIUS, SHOT_COLOUR.r, SHOT_COLOUR.g, SHOT_COLOUR.b, 255);
-			// if (shot_position.x == explosion_position.x && shot_position.y == explosion_position.y) {
-			// 	can_shoot = true;
-			// }
+			
+			if (abs(shot_position.x - explosion_position.x) <= 3 && abs(shot_position.y - explosion_position.y) <= 3) {
+				can_shoot = true;
+				draw_explosion(explosion_position);
+			}
 		}
-
-
 
 		// Update cursor location and draw cursor
 		float cursor_position_delta = frame_delta_seconds * CURSOR_VELOCITY;

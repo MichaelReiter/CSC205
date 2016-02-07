@@ -90,7 +90,7 @@ public:
 			// can't normalize a 0 vector so just return itself
 			return Vector2d(x, y);
 		}
-		
+
 		double new_x = x / len;
 		double new_y = y / len;
 
@@ -99,7 +99,7 @@ public:
 	}
 	
 	void print(){
-		std::cout << "(" << x << "," << y << ")";
+		std::cout << "(" << x << "," << y << ")" << std::endl;
 	}
 	
 	friend std::ostream & operator<< ( std::ostream& s, const Vector2d& v){
