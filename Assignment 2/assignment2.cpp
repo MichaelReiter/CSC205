@@ -17,19 +17,23 @@ using namespace std;
 
 static const int WINDOW_SIZE_X = 800;
 static const int WINDOW_SIZE_Y = 600;
-static float CURSOR_VELOCITY = 150; // velocity is in pixels/second
+static float CURSOR_VELOCITY = 300; // velocity is in pixels/second
+static float SHOT_VELOCITY = 300;
 static const ColourRGB& CURSOR_COLOUR = ColourRGB(26, 188, 156);
+static const ColourRGB& SHOT_COLOUR = ColourRGB(236, 240, 241);
 
 class A2Canvas {
 public:
 	static const int CANVAS_SIZE_X = 800;
 	static const int CANVAS_SIZE_Y = 600;
-	static const int CURSOR_RADIUS = 15;
+	static const int CURSOR_RADIUS = 3;
+	static const int SHOT_RADIUS = 1;
 
 	A2Canvas() {
 		cursor_position.x = CANVAS_SIZE_X/2;
 		cursor_position.y = CANVAS_SIZE_Y/2;
 		cursor_direction = Vector2d(0, 0);
+		can_shoot = true;
 	}
 	
 	void frame_loop(SDL_Renderer* r) {
@@ -87,6 +91,8 @@ private:
 			cursor_direction.x = -1;
 		} else if (key == SDLK_RIGHT) {
 			cursor_direction.x = 1;
+		} else if (key == SDLK_r && can_shoot) {
+			fire_shot(cursor_position);
 		}
 	}
 
@@ -103,7 +109,6 @@ private:
 	}
 
 	void handle_mouse_down(int x, int y, int button) {
-		CURSOR_VELOCITY *= 2;
 	}
 
 	void handle_mouse_up(int x, int y, int button) {
@@ -112,26 +117,47 @@ private:
 	void handle_mouse_moved(int x, int y) {
 	}
 
+	void fire_shot(Vector2d target) {
+		cout << "Shot fired toward (" << (int)target.x << ", " << (int)target.y << ")" << endl;
+		shot_position = Vector2d(CANVAS_SIZE_X/2, CANVAS_SIZE_Y - 25);
+		shot_direction = cursor_position - shot_position;
+		explosion_position = cursor_position;
+		can_shoot = false;
+	}
+
 	void draw(SDL_Renderer *renderer, float frame_delta_ms) {
-
 		float frame_delta_seconds = frame_delta_ms/1000.0;
-		float position_delta = frame_delta_seconds * CURSOR_VELOCITY;
-
-		Vector2d new_position = cursor_position + position_delta*cursor_direction.normalize();
-
-		cursor_position = new_position;
 
 		// Fill background colour
 		SDL_SetRenderDrawColor(renderer, 52, 73, 94, 255);
 		SDL_RenderClear(renderer);
-	
-		const ColourRGB& CURSOR_COLOUR = ColourRGB(26, 188, 156);
+
+
+
+		// Draw shot
+		if (can_shoot == false) {
+			float shot_position_delta = frame_delta_seconds * SHOT_VELOCITY;
+			Vector2d new_position = shot_position + shot_position_delta*shot_direction.normalize();
+			shot_position = new_position;
+			filledCircleRGBA(renderer, shot_position.x, shot_position.y, SHOT_RADIUS, SHOT_COLOUR.r, SHOT_COLOUR.g, SHOT_COLOUR.b, 255);
+			// if (shot_position.x == explosion_position.x && shot_position.y == explosion_position.y) {
+			// 	can_shoot = true;
+			// }
+		}
+
+
+
+		// Update cursor location and draw cursor
+		float cursor_position_delta = frame_delta_seconds * CURSOR_VELOCITY;
+		Vector2d new_position = cursor_position + cursor_position_delta*cursor_direction.normalize();
+		cursor_position = new_position;
 		filledCircleRGBA(renderer, cursor_position.x, cursor_position.y, CURSOR_RADIUS, CURSOR_COLOUR.r, CURSOR_COLOUR.g, CURSOR_COLOUR.b, 255);
 
 		SDL_RenderPresent(renderer);
 	}
 
-	Vector2d cursor_position, cursor_direction;
+	Vector2d cursor_position, cursor_direction, shot_position, shot_direction, explosion_position;
+	bool can_shoot;
 };
 
 int main() {
