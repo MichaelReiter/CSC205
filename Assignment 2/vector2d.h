@@ -83,6 +83,20 @@ public:
 	double length(){
 		return sqrt(dot(*this));
 	}
+
+	Vector2d normalize() {
+		double len = length();
+		if (len == 0) {
+			// can't normalize a 0 vector so just return itself
+			return Vector2d(x, y);
+		}
+		
+		double new_x = x / len;
+		double new_y = y / len;
+
+		// std::cout << len << x << y << std::endl;
+		return Vector2d(new_x, new_y);
+	}
 	
 	void print(){
 		std::cout << "(" << x << "," << y << ")";

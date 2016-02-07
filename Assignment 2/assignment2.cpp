@@ -17,7 +17,7 @@ using namespace std;
 
 static const int WINDOW_SIZE_X = 800;
 static const int WINDOW_SIZE_Y = 600;
-static float CURSOR_VELOCITY = 300; // velocity is in pixels/second
+static float CURSOR_VELOCITY = 150; // velocity is in pixels/second
 static const ColourRGB& CURSOR_COLOUR = ColourRGB(26, 188, 156);
 
 class A2Canvas {
@@ -117,7 +117,7 @@ private:
 		float frame_delta_seconds = frame_delta_ms/1000.0;
 		float position_delta = frame_delta_seconds * CURSOR_VELOCITY;
 
-		Vector2d new_position = cursor_position + position_delta*cursor_direction;
+		Vector2d new_position = cursor_position + position_delta*cursor_direction.normalize();
 
 		cursor_position = new_position;
 
