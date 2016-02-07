@@ -17,7 +17,8 @@ using namespace std;
 
 static const int WINDOW_SIZE_X = 800;
 static const int WINDOW_SIZE_Y = 600;
-static float CURSOR_VELOCITY = 150; // velocity is in pixels/second
+static float CURSOR_VELOCITY = 300; // velocity is in pixels/second
+static const ColourRGB& CURSOR_COLOUR = ColourRGB(26, 188, 156);
 
 class A2Canvas {
 public:
@@ -26,10 +27,9 @@ public:
 	static const int CURSOR_RADIUS = 15;
 
 	A2Canvas() {
-		ball_position.x = CANVAS_SIZE_X/2;
-		ball_position.y = CANVAS_SIZE_Y/2;
-		ball_direction.x = cos(30*(M_PI/180.0));
-		ball_direction.y = sin(30*(M_PI/180.0));
+		cursor_position.x = CANVAS_SIZE_X/2;
+		cursor_position.y = CANVAS_SIZE_Y/2;
+		cursor_direction = Vector2d(0, 0);
 	}
 	
 	void frame_loop(SDL_Renderer* r) {
@@ -50,6 +50,10 @@ public:
 					case SDL_KEYDOWN:
 						//e.key stores the key pressed
 						handle_key_down(e.key.keysym.sym);
+						break;
+					case SDL_KEYUP:
+						//e.key stores the key pressed
+						handle_key_up(e.key.keysym.sym);
 						break;
 					case SDL_MOUSEMOTION:
 						//e.motion contains the relevant mouse position information
@@ -76,13 +80,25 @@ public:
 private:
 	void handle_key_down(SDL_Keycode key) {
 		if (key == SDLK_UP) {
-
+			cursor_direction.y = -1;
 		} else if (key == SDLK_DOWN) {
-
+			cursor_direction.y = 1;
 		} else if (key == SDLK_LEFT) {
-
+			cursor_direction.x = -1;
 		} else if (key == SDLK_RIGHT) {
+			cursor_direction.x = 1;
+		}
+	}
 
+	void handle_key_up(SDL_Keycode key) {
+		if (key == SDLK_UP) {
+			cursor_direction.y = 0;
+		} else if (key == SDLK_DOWN) {
+			cursor_direction.y = 0;
+		} else if (key == SDLK_LEFT) {
+			cursor_direction.x = 0;
+		} else if (key == SDLK_RIGHT) {
+			cursor_direction.x = 0;
 		}
 	}
 
@@ -97,59 +113,25 @@ private:
 	}
 
 	void draw(SDL_Renderer *renderer, float frame_delta_ms) {
-	
+
 		float frame_delta_seconds = frame_delta_ms/1000.0;
 		float position_delta = frame_delta_seconds * CURSOR_VELOCITY;
 
-		Vector2d new_position = ball_position + position_delta*ball_direction;
+		Vector2d new_position = cursor_position + position_delta*cursor_direction;
 
-		//The ball collides with the edge of the screen if the new position is less than CURSOR_RADIUS
-		//pixels away from any edge.
+		cursor_position = new_position;
 
-		if (new_position.x <= CURSOR_RADIUS) {
-			//Collide with left edge
-			
-			//Determine how far past the collision point the new position is.
-			float offset_x = CURSOR_RADIUS-new_position.x;
-			//Mirror the direction around the y axis (since the ball bounces)
-			ball_direction.x = -ball_direction.x;
-			new_position.x += 2*offset_x;
-		} else if (new_position.x >= CANVAS_SIZE_X - CURSOR_RADIUS) {
-			//Collide with right edge
-
-			//Determine how far past the collision point the new position is.
-			float offset_x = new_position.x - (CANVAS_SIZE_X - CURSOR_RADIUS);
-			//Mirror the direction around the y axis (since the ball bounces)
-			ball_direction.x = -ball_direction.x;
-			new_position.x -= 2*offset_x;
-		} else if(new_position.y <= CURSOR_RADIUS) {
-			//Collide with top
-
-			//Determine how far past the collision point the new position is.
-			float offset_y = CURSOR_RADIUS-new_position.y;
-			//Mirror the direction around the x axis (since the ball bounces)
-			ball_direction.y = -ball_direction.y;
-			new_position.y += 2*offset_y;
-		} else if(new_position.y >= CANVAS_SIZE_Y - CURSOR_RADIUS) {
-			//Collide with bottom
-
-			//Determine how far past the collision point the new position is.
-			float offset_y = new_position.y - (CANVAS_SIZE_Y - CURSOR_RADIUS);
-			//Mirror the direction around the x axis (since the ball bounces)
-			ball_direction.y = -ball_direction.y;
-			new_position.y -= 2*offset_y;
-		}
-		ball_position = new_position;
-
-		SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255);
+		// Fill background colour
+		SDL_SetRenderDrawColor(renderer, 52, 73, 94, 255);
 		SDL_RenderClear(renderer);
 	
-		const ColourRGB& ball_colour = ColourRGB(0,0,0);
-		filledCircleRGBA(renderer, ball_position.x, ball_position.y, CURSOR_RADIUS, ball_colour.r, ball_colour.g, ball_colour.b, 255);
+		const ColourRGB& CURSOR_COLOUR = ColourRGB(26, 188, 156);
+		filledCircleRGBA(renderer, cursor_position.x, cursor_position.y, CURSOR_RADIUS, CURSOR_COLOUR.r, CURSOR_COLOUR.g, CURSOR_COLOUR.b, 255);
 
 		SDL_RenderPresent(renderer);
 	}
-	Vector2d ball_position, ball_direction;
+
+	Vector2d cursor_position, cursor_direction;
 };
 
 int main() {
