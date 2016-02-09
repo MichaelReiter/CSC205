@@ -133,7 +133,7 @@ private:
 		// Shot starts at cannon and fires toward cursor
 		shot_position = Vector2d(CANVAS_SIZE_X/2, CANVAS_SIZE_Y - 50);
 		shot_direction = cursor_position - shot_position;
-		explosion_position = cursor_position;
+		target_position = cursor_position;
 		can_shoot = false;
 	}
 
@@ -167,7 +167,6 @@ private:
 		boxRGBA(renderer, 6*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50, 6*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26, BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
 		boxRGBA(renderer, 8*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50, 8*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26, BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
 		
-
 		// // Draw cannon
 		// cannon_direction = cursor_position - CANNON_BASE;
 		// thickLineRGBA(renderer, CANNON_BASE.x, CANNON_BASE.y, cannon_direction.x, cannon_direction.y, CANNON_THICKNESS, GROUND_COLOUR.r, GROUND_COLOUR.g, GROUND_COLOUR.b, 255);
@@ -179,9 +178,10 @@ private:
 			shot_position = new_position;
 			filledCircleRGBA(renderer, shot_position.x, shot_position.y, SHOT_RADIUS, SHOT_COLOUR.r, SHOT_COLOUR.g, SHOT_COLOUR.b, 255);
 			
-			if (abs(shot_position.x - explosion_position.x) <= 3 && abs(shot_position.y - explosion_position.y) <= 3) {
+			if (abs(shot_position.x - target_position.x) <= 3 && abs(shot_position.y - target_position.y) <= 3) {
 				can_shoot = true;
 				boom = true;
+				explosion_position = target_position;
 			}
 		}
 
@@ -200,7 +200,7 @@ private:
 	}
 
 	Vector2d cursor_position, cursor_direction, shot_position, 
-	shot_direction, cannon_direction, explosion_position;
+	shot_direction, cannon_direction, target_position, explosion_position;
 	bool can_shoot, boom;
 	int explosion_time;
 };
