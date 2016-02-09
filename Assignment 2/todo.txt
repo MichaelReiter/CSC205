@@ -1,6 +1,5 @@
 TODO
 
-- Constrain cursor
 - Add rotating cannon
 - Add missiles
 - Add base destruction

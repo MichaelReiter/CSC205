@@ -1,6 +1,7 @@
 /* assignment2.cpp
 
-  A simple game using SDL2 to demonstrate the use of a 2D graphics API.
+  A simple game similar to Missile Command built using SDL
+  to demonstrate the use of a 2D graphics API.
 
   Michael Reiter 2016
 */
@@ -155,19 +156,40 @@ private:
 		float frame_delta_seconds = frame_delta_ms/1000.0;
 
 		// Fill background colour
-		SDL_SetRenderDrawColor(renderer, BACKGROUND_COLOUR.r, BACKGROUND_COLOUR.g, BACKGROUND_COLOUR.b, 255);
+		SDL_SetRenderDrawColor(renderer,
+			BACKGROUND_COLOUR.r, BACKGROUND_COLOUR.g, BACKGROUND_COLOUR.b, 255);
 		SDL_RenderClear(renderer);
 
 		// Draw ground
-		boxRGBA(renderer, CANVAS_SIZE_X, CANVAS_SIZE_Y - 25, 0, CANVAS_SIZE_Y, GROUND_COLOUR.r, GROUND_COLOUR.g, GROUND_COLOUR.b, 255);
+		boxRGBA(renderer,
+			CANVAS_SIZE_X, CANVAS_SIZE_Y - 25,
+			0, CANVAS_SIZE_Y,
+			GROUND_COLOUR.r, GROUND_COLOUR.g, GROUND_COLOUR.b, 255);
 
 		// Draw bases
-		boxRGBA(renderer, 1*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50, 1*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26, BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
-		boxRGBA(renderer, 3*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50, 3*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26, BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
-		boxRGBA(renderer, 6*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50, 6*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26, BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
-		boxRGBA(renderer, 8*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50, 8*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26, BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
+		boxRGBA(renderer,
+			1*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
+			1*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
+			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
+		boxRGBA(renderer,
+			3*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
+			3*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
+			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
+		boxRGBA(renderer,
+			6*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
+			6*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
+			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
+		boxRGBA(renderer,
+			8*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
+			8*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
+			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
 		
-		// // Draw cannon
+		// Draw cannon
+		filledTrigonRGBA(renderer,
+			CANVAS_SIZE_X/2 - 30, CANVAS_SIZE_Y - 26,
+			CANVAS_SIZE_X/2, CANVAS_SIZE_Y - 52,
+			CANVAS_SIZE_X/2 + 30, CANVAS_SIZE_Y - 26,
+			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
 		// cannon_direction = cursor_position - CANNON_BASE;
 		// thickLineRGBA(renderer, CANNON_BASE.x, CANNON_BASE.y, cannon_direction.x, cannon_direction.y, CANNON_THICKNESS, GROUND_COLOUR.r, GROUND_COLOUR.g, GROUND_COLOUR.b, 255);
 
@@ -176,7 +198,10 @@ private:
 			float shot_position_delta = frame_delta_seconds * SHOT_VELOCITY;
 			Vector2d new_position = shot_position + shot_position_delta*shot_direction.normalize();
 			shot_position = new_position;
-			filledCircleRGBA(renderer, shot_position.x, shot_position.y, SHOT_RADIUS, SHOT_COLOUR.r, SHOT_COLOUR.g, SHOT_COLOUR.b, 255);
+			filledCircleRGBA(renderer,
+				shot_position.x, shot_position.y,
+				SHOT_RADIUS,
+				SHOT_COLOUR.r, SHOT_COLOUR.g, SHOT_COLOUR.b, 255);
 			
 			if (abs(shot_position.x - target_position.x) <= 3 && abs(shot_position.y - target_position.y) <= 3) {
 				can_shoot = true;
@@ -190,13 +215,18 @@ private:
 			draw_explosion(explosion_position, renderer);
 		}
 
-		// Update cursor location and draw cursor
+		// Update cursor location
 		float cursor_position_delta = frame_delta_seconds * CURSOR_VELOCITY;
 		Vector2d new_position = cursor_position + cursor_position_delta*cursor_direction.normalize();
 		if (new_position.x > 10 && new_position.x < CANVAS_SIZE_X - 10 && new_position.y > 10 && new_position.y < CANVAS_SIZE_Y - 100) {
 			cursor_position = new_position;
 		}
-		filledCircleRGBA(renderer, cursor_position.x, cursor_position.y, CURSOR_RADIUS, CURSOR_COLOUR.r, CURSOR_COLOUR.g, CURSOR_COLOUR.b, 255);
+
+		// Draw cursor
+		filledCircleRGBA(renderer,
+			cursor_position.x, cursor_position.y,
+			CURSOR_RADIUS,
+			CURSOR_COLOUR.r, CURSOR_COLOUR.g, CURSOR_COLOUR.b, 255);
 
 		SDL_RenderPresent(renderer);
 	}
