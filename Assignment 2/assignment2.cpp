@@ -15,8 +15,8 @@
 
 using namespace std;
 
-static const int WINDOW_SIZE_X = 800;
-static const int WINDOW_SIZE_Y = 600;
+static const int WINDOW_SIZE_X = 1024;
+static const int WINDOW_SIZE_Y = 768;
 static const int CANNON_THICKNESS = 10;
 static const float CURSOR_VELOCITY = 300; // velocity is in pixels/second
 static const float SHOT_VELOCITY = 300;
@@ -24,7 +24,8 @@ static const float SHOT_VELOCITY = 300;
 static const ColourRGB& CURSOR_COLOUR = ColourRGB(149, 165, 166);
 static const ColourRGB& SHOT_COLOUR = ColourRGB(255, 255, 255);
 static const ColourRGB& BACKGROUND_COLOUR = ColourRGB(30, 30, 30);
-static const ColourRGB& GROUND_COLOUR = ColourRGB(39, 174, 96);
+static const ColourRGB& GROUND_COLOUR = ColourRGB(52,73,94);
+static const ColourRGB& BASE_COLOUR = ColourRGB(39, 174, 96);
 static const ColourRGB& EXPLOSION_COLOUR = ColourRGB(192, 57, 43);
 
 static const Vector2d CANNON_BASE = Vector2d(WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
@@ -33,8 +34,8 @@ static const unsigned int EXPLOSION_RADIUS = 30;
 
 class A2Canvas {
 public:
-	static const int CANVAS_SIZE_X = 800;
-	static const int CANVAS_SIZE_Y = 600;
+	static const int CANVAS_SIZE_X = WINDOW_SIZE_X;
+	static const int CANVAS_SIZE_Y = WINDOW_SIZE_Y;
 	static const int CURSOR_RADIUS = 3;
 	static const int SHOT_RADIUS = 1;
 
@@ -159,6 +160,13 @@ private:
 
 		// Draw ground
 		boxRGBA(renderer, CANVAS_SIZE_X, CANVAS_SIZE_Y - 25, 0, CANVAS_SIZE_Y, GROUND_COLOUR.r, GROUND_COLOUR.g, GROUND_COLOUR.b, 255);
+
+		// Draw bases
+		boxRGBA(renderer, 1*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50, 1*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26, BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
+		boxRGBA(renderer, 3*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50, 3*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26, BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
+		boxRGBA(renderer, 6*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50, 6*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26, BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
+		boxRGBA(renderer, 8*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50, 8*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26, BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
+		
 
 		// // Draw cannon
 		// cannon_direction = cursor_position - CANNON_BASE;
