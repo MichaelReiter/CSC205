@@ -19,8 +19,11 @@ static const int WINDOW_SIZE_X = 800;
 static const int WINDOW_SIZE_Y = 600;
 static float CURSOR_VELOCITY = 300; // velocity is in pixels/second
 static float SHOT_VELOCITY = 300;
-static const ColourRGB& CURSOR_COLOUR = ColourRGB(26, 188, 156);
+static const ColourRGB& CURSOR_COLOUR = ColourRGB(192, 57, 43);
 static const ColourRGB& SHOT_COLOUR = ColourRGB(236, 240, 241);
+static const ColourRGB& BACKGROUND_COLOUR = ColourRGB(30, 30, 30);
+static const ColourRGB& GROUND_COLOUR = ColourRGB(39, 174, 96);
+
 
 class A2Canvas {
 public:
@@ -118,7 +121,7 @@ private:
 	}
 
 	void fire_shot(Vector2d target) {
-		shot_position = Vector2d(CANVAS_SIZE_X/2, CANVAS_SIZE_Y - 25);
+		shot_position = Vector2d(CANVAS_SIZE_X/2, CANVAS_SIZE_Y - 50);
 		shot_direction = cursor_position - shot_position;
 		explosion_position = cursor_position;
 		can_shoot = false;
@@ -132,7 +135,7 @@ private:
 		float frame_delta_seconds = frame_delta_ms/1000.0;
 
 		// Fill background colour
-		SDL_SetRenderDrawColor(renderer, 52, 73, 94, 255);
+		SDL_SetRenderDrawColor(renderer, BACKGROUND_COLOUR.r, BACKGROUND_COLOUR.g, BACKGROUND_COLOUR.b, 255);
 		SDL_RenderClear(renderer);
 
 
@@ -155,6 +158,9 @@ private:
 		Vector2d new_position = cursor_position + cursor_position_delta*cursor_direction.normalize();
 		cursor_position = new_position;
 		filledCircleRGBA(renderer, cursor_position.x, cursor_position.y, CURSOR_RADIUS, CURSOR_COLOUR.r, CURSOR_COLOUR.g, CURSOR_COLOUR.b, 255);
+
+		// Draw ground
+		boxRGBA(renderer, CANVAS_SIZE_X, CANVAS_SIZE_Y - 25, 0, CANVAS_SIZE_Y, GROUND_COLOUR.r, GROUND_COLOUR.g, GROUND_COLOUR.b, 255);
 
 		SDL_RenderPresent(renderer);
 	}
