@@ -17,13 +17,19 @@ using namespace std;
 
 static const int WINDOW_SIZE_X = 800;
 static const int WINDOW_SIZE_Y = 600;
-static float CURSOR_VELOCITY = 300; // velocity is in pixels/second
-static float SHOT_VELOCITY = 300;
-static const ColourRGB& CURSOR_COLOUR = ColourRGB(192, 57, 43);
-static const ColourRGB& SHOT_COLOUR = ColourRGB(236, 240, 241);
+static const int CANNON_THICKNESS = 10;
+static const float CURSOR_VELOCITY = 300; // velocity is in pixels/second
+static const float SHOT_VELOCITY = 300;
+
+static const ColourRGB& CURSOR_COLOUR = ColourRGB(149, 165, 166);
+static const ColourRGB& SHOT_COLOUR = ColourRGB(255, 255, 255);
 static const ColourRGB& BACKGROUND_COLOUR = ColourRGB(30, 30, 30);
 static const ColourRGB& GROUND_COLOUR = ColourRGB(39, 174, 96);
+static const ColourRGB& EXPLOSION_COLOUR = ColourRGB(192, 57, 43);
 
+static const Vector2d CANNON_BASE = Vector2d(WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
+
+static const unsigned int EXPLOSION_RADIUS = 30; 
 
 class A2Canvas {
 public:
@@ -37,6 +43,8 @@ public:
 		cursor_position.y = CANVAS_SIZE_Y/2;
 		cursor_direction = Vector2d(0, 0);
 		can_shoot = true;
+		boom = false;
+		explosion_time = EXPLOSION_RADIUS;
 	}
 	
 	void frame_loop(SDL_Renderer* r) {
@@ -121,14 +129,25 @@ private:
 	}
 
 	void fire_shot(Vector2d target) {
+		// Shot starts at cannon and fires toward cursor
 		shot_position = Vector2d(CANVAS_SIZE_X/2, CANVAS_SIZE_Y - 50);
 		shot_direction = cursor_position - shot_position;
 		explosion_position = cursor_position;
 		can_shoot = false;
 	}
 
-	void draw_explosion(Vector2d position) {
+	int explosion_size(int x) {
+		return EXPLOSION_RADIUS - x;
+	}
 
+	void draw_explosion(Vector2d position, SDL_Renderer* renderer) {
+		if (explosion_time > 0) {
+			filledCircleRGBA(renderer, position.x, position.y, explosion_size(explosion_time), EXPLOSION_COLOUR.r, EXPLOSION_COLOUR.g, EXPLOSION_COLOUR.b, 255);
+			explosion_time -= 3;
+		} else if (explosion_time == 0) {
+			boom = false;
+			explosion_time = EXPLOSION_RADIUS;
+		}
 	}
 
 	void draw(SDL_Renderer *renderer, float frame_delta_ms) {
@@ -138,7 +157,12 @@ private:
 		SDL_SetRenderDrawColor(renderer, BACKGROUND_COLOUR.r, BACKGROUND_COLOUR.g, BACKGROUND_COLOUR.b, 255);
 		SDL_RenderClear(renderer);
 
+		// Draw ground
+		boxRGBA(renderer, CANVAS_SIZE_X, CANVAS_SIZE_Y - 25, 0, CANVAS_SIZE_Y, GROUND_COLOUR.r, GROUND_COLOUR.g, GROUND_COLOUR.b, 255);
 
+		// // Draw cannon
+		// cannon_direction = cursor_position - CANNON_BASE;
+		// thickLineRGBA(renderer, CANNON_BASE.x, CANNON_BASE.y, cannon_direction.x, cannon_direction.y, CANNON_THICKNESS, GROUND_COLOUR.r, GROUND_COLOUR.g, GROUND_COLOUR.b, 255);
 
 		// Draw shot
 		if (can_shoot == false) {
@@ -149,8 +173,13 @@ private:
 			
 			if (abs(shot_position.x - explosion_position.x) <= 3 && abs(shot_position.y - explosion_position.y) <= 3) {
 				can_shoot = true;
-				draw_explosion(explosion_position);
+				boom = true;
 			}
+		}
+
+		// Draw explosion
+		if (boom) {
+			draw_explosion(explosion_position, renderer);
 		}
 
 		// Update cursor location and draw cursor
@@ -159,14 +188,13 @@ private:
 		cursor_position = new_position;
 		filledCircleRGBA(renderer, cursor_position.x, cursor_position.y, CURSOR_RADIUS, CURSOR_COLOUR.r, CURSOR_COLOUR.g, CURSOR_COLOUR.b, 255);
 
-		// Draw ground
-		boxRGBA(renderer, CANVAS_SIZE_X, CANVAS_SIZE_Y - 25, 0, CANVAS_SIZE_Y, GROUND_COLOUR.r, GROUND_COLOUR.g, GROUND_COLOUR.b, 255);
-
 		SDL_RenderPresent(renderer);
 	}
 
-	Vector2d cursor_position, cursor_direction, shot_position, shot_direction, explosion_position;
-	bool can_shoot;
+	Vector2d cursor_position, cursor_direction, shot_position, 
+	shot_direction, cannon_direction, explosion_position;
+	bool can_shoot, boom;
+	int explosion_time;
 };
 
 int main() {
