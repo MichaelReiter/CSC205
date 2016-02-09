@@ -193,7 +193,9 @@ private:
 		// Update cursor location and draw cursor
 		float cursor_position_delta = frame_delta_seconds * CURSOR_VELOCITY;
 		Vector2d new_position = cursor_position + cursor_position_delta*cursor_direction.normalize();
-		cursor_position = new_position;
+		if (new_position.x > 10 && new_position.x < CANVAS_SIZE_X - 10 && new_position.y > 10 && new_position.y < CANVAS_SIZE_Y - 100) {
+			cursor_position = new_position;
+		}
 		filledCircleRGBA(renderer, cursor_position.x, cursor_position.y, CURSOR_RADIUS, CURSOR_COLOUR.r, CURSOR_COLOUR.g, CURSOR_COLOUR.b, 255);
 
 		SDL_RenderPresent(renderer);
