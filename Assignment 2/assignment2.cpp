@@ -18,20 +18,24 @@ using namespace std;
 
 static const int WINDOW_SIZE_X = 1024;
 static const int WINDOW_SIZE_Y = 768;
-static const int CANNON_THICKNESS = 10;
-static const float CURSOR_VELOCITY = 300; // velocity is in pixels/second
+static const int CANNON_THICKNESS = 15;
+static const int CANNON_LENGTH = 20;
+static const float CURSOR_VELOCITY = 300; 		// velocity is in pixels/second
 static const float SHOT_VELOCITY = 300;
 
-static const ColourRGB& CURSOR_COLOUR = ColourRGB(149, 165, 166);
-static const ColourRGB& SHOT_COLOUR = ColourRGB(255, 255, 255);
-static const ColourRGB& BACKGROUND_COLOUR = ColourRGB(30, 30, 30);
-static const ColourRGB& GROUND_COLOUR = ColourRGB(52,73,94);
-static const ColourRGB& BASE_COLOUR = ColourRGB(39, 174, 96);
-static const ColourRGB& EXPLOSION_COLOUR = ColourRGB(192, 57, 43);
+static const ColourRGB& CURSOR_COLOUR = ColourRGB(149, 165, 166);		// Grey
+static const ColourRGB& SHOT_COLOUR = ColourRGB(255, 255, 255);			// White
+static const ColourRGB& BACKGROUND_COLOUR = ColourRGB(30, 30, 30);	// Charcoal
+static const ColourRGB& GROUND_COLOUR = ColourRGB(52,73,94);				// Navy
+static const ColourRGB& BASE_COLOUR = ColourRGB(39, 174, 96);				// Green
+static const ColourRGB EXPLOSION_COLOUR[] = {
+	ColourRGB(192, 57, 43), // Red
+};
+static const int EXPLOSION_COLOURS_LENGTH = sizeof(EXPLOSION_COLOUR) / sizeof(EXPLOSION_COLOUR[0]);
+static const unsigned int EXPLOSION_RADIUS = 30;
 
-static const Vector2d CANNON_BASE = Vector2d(WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
+static const Vector2d CANNON_BASE = Vector2d(WINDOW_SIZE_X/2, WINDOW_SIZE_Y-43);
 
-static const unsigned int EXPLOSION_RADIUS = 30; 
 
 class A2Canvas {
 public:
@@ -53,31 +57,25 @@ public:
 		unsigned int last_frame = SDL_GetTicks();
 		unsigned int frame_number = 0;
 		while(1) {
-			//cout << "Frame " << frame_number << endl;
 			unsigned int current_frame = SDL_GetTicks();
 			unsigned int delta_ms = current_frame - last_frame;
 			
 			SDL_Event e;
-			//Handle all queued events
 			while(SDL_PollEvent(&e)) {
 				switch(e.type) {
 					case SDL_QUIT:
 						//Exit immediately
 						return;
 					case SDL_KEYDOWN:
-						//e.key stores the key pressed
 						handle_key_down(e.key.keysym.sym);
 						break;
 					case SDL_KEYUP:
-						//e.key stores the key pressed
 						handle_key_up(e.key.keysym.sym);
 						break;
 					case SDL_MOUSEMOTION:
-						//e.motion contains the relevant mouse position information
 						handle_mouse_moved(e.motion.x, e.motion.y);
 						break;
 					case SDL_MOUSEBUTTONDOWN:
-						//e.button contains the relevant mouse position and button information
 						handle_mouse_down(e.button.x, e.button.y, e.button.button);
 						break;
 					case SDL_MOUSEBUTTONUP:		
@@ -133,8 +131,8 @@ private:
 	void fire_shot(Vector2d target) {
 		// Shot starts at cannon and fires toward cursor
 		shot_position = Vector2d(CANVAS_SIZE_X/2, CANVAS_SIZE_Y - 50);
-		shot_direction = cursor_position - shot_position;
 		target_position = cursor_position;
+		shot_direction = target_position - shot_position;
 		can_shoot = false;
 	}
 
@@ -144,7 +142,13 @@ private:
 
 	void draw_explosion(Vector2d position, SDL_Renderer* renderer) {
 		if (explosion_time > 0) {
-			filledCircleRGBA(renderer, position.x, position.y, explosion_size(explosion_time), EXPLOSION_COLOUR.r, EXPLOSION_COLOUR.g, EXPLOSION_COLOUR.b, 255);
+			filledCircleRGBA(renderer,
+				position.x, position.y,
+				explosion_size(explosion_time),
+				EXPLOSION_COLOUR[explosion_time % EXPLOSION_COLOURS_LENGTH].r,
+				EXPLOSION_COLOUR[explosion_time % EXPLOSION_COLOURS_LENGTH].g,
+				EXPLOSION_COLOUR[explosion_time % EXPLOSION_COLOURS_LENGTH].b,
+				255);
 			explosion_time -= 3;
 		} else if (explosion_time == 0) {
 			boom = false;
@@ -183,15 +187,6 @@ private:
 			8*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
 			8*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
 			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
-		
-		// Draw cannon
-		filledTrigonRGBA(renderer,
-			CANVAS_SIZE_X/2 - 30, CANVAS_SIZE_Y - 26,
-			CANVAS_SIZE_X/2, CANVAS_SIZE_Y - 52,
-			CANVAS_SIZE_X/2 + 30, CANVAS_SIZE_Y - 26,
-			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
-		// cannon_direction = cursor_position - CANNON_BASE;
-		// thickLineRGBA(renderer, CANNON_BASE.x, CANNON_BASE.y, cannon_direction.x, cannon_direction.y, CANNON_THICKNESS, GROUND_COLOUR.r, GROUND_COLOUR.g, GROUND_COLOUR.b, 255);
 
 		// Draw shot
 		if (can_shoot == false) {
@@ -209,6 +204,20 @@ private:
 				explosion_position = target_position;
 			}
 		}
+
+		// Draw cannon
+		cannon_direction = (cursor_position - CANNON_BASE).normalize();
+		cannon_end = Vector2d(CANNON_BASE.x + CANNON_LENGTH*cannon_direction.x, CANNON_BASE.y + CANNON_LENGTH*cannon_direction.y);
+		thickLineRGBA(renderer,
+			CANNON_BASE.x, CANNON_BASE.y,
+			cannon_end.x, cannon_end.y,
+			CANNON_THICKNESS,
+			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
+		filledTrigonRGBA(renderer,
+			CANVAS_SIZE_X/2 - 30, CANVAS_SIZE_Y - 26,
+			CANVAS_SIZE_X/2, CANVAS_SIZE_Y - 52,
+			CANVAS_SIZE_X/2 + 30, CANVAS_SIZE_Y - 26,
+			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
 
 		// Draw explosion
 		if (boom) {
@@ -232,13 +241,13 @@ private:
 	}
 
 	Vector2d cursor_position, cursor_direction, shot_position, 
-	shot_direction, cannon_direction, target_position, explosion_position;
+	shot_direction, cannon_direction, cannon_end, target_position, explosion_position;
 	bool can_shoot, boom;
 	int explosion_time;
 };
 
 int main() {
-	SDL_Window* window = SDL_CreateWindow("CSC 205 Assignment 2",
+	SDL_Window* window = SDL_CreateWindow("Missile Defender",
     SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
     WINDOW_SIZE_X, WINDOW_SIZE_Y, 
 	  SDL_WINDOW_SHOWN);
