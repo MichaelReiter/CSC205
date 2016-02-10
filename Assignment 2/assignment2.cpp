@@ -29,10 +29,12 @@ static const ColourRGB& BACKGROUND_COLOUR = ColourRGB(30, 30, 30);	// Charcoal
 static const ColourRGB& GROUND_COLOUR = ColourRGB(52,73,94);				// Navy
 static const ColourRGB& BASE_COLOUR = ColourRGB(39, 174, 96);				// Green
 static const ColourRGB EXPLOSION_COLOUR[] = {
-	ColourRGB(192, 57, 43), // Red
+	ColourRGB(192, 57, 43),	// Red
+	ColourRGB(241,196,15),	// Blue
+
 };
 static const int EXPLOSION_COLOURS_LENGTH = sizeof(EXPLOSION_COLOUR) / sizeof(EXPLOSION_COLOUR[0]);
-static const unsigned int EXPLOSION_RADIUS = 30;
+static const unsigned int EXPLOSION_RADIUS = 40;
 
 static const Vector2d CANNON_BASE = Vector2d(WINDOW_SIZE_X/2, WINDOW_SIZE_Y-43);
 
@@ -51,6 +53,7 @@ public:
 		can_shoot = true;
 		boom = false;
 		explosion_time = EXPLOSION_RADIUS;
+		explosion_frame = 0;
 	}
 	
 	void frame_loop(SDL_Renderer* r) {
@@ -142,14 +145,18 @@ private:
 
 	void draw_explosion(Vector2d position, SDL_Renderer* renderer) {
 		if (explosion_time > 0) {
+			if (explosion_time % 2 == 0) {
+				explosion_frame = (explosion_frame + 1) % EXPLOSION_COLOURS_LENGTH;
+			}
+
 			filledCircleRGBA(renderer,
 				position.x, position.y,
 				explosion_size(explosion_time),
-				EXPLOSION_COLOUR[explosion_time % EXPLOSION_COLOURS_LENGTH].r,
-				EXPLOSION_COLOUR[explosion_time % EXPLOSION_COLOURS_LENGTH].g,
-				EXPLOSION_COLOUR[explosion_time % EXPLOSION_COLOURS_LENGTH].b,
+				EXPLOSION_COLOUR[explosion_frame].r,
+				EXPLOSION_COLOUR[explosion_frame].g,
+				EXPLOSION_COLOUR[explosion_frame].b,
 				255);
-			explosion_time -= 3;
+			explosion_time -= 5;
 		} else if (explosion_time == 0) {
 			boom = false;
 			explosion_time = EXPLOSION_RADIUS;
@@ -243,7 +250,7 @@ private:
 	Vector2d cursor_position, cursor_direction, shot_position, 
 	shot_direction, cannon_direction, cannon_end, target_position, explosion_position;
 	bool can_shoot, boom;
-	int explosion_time;
+	int explosion_time, explosion_frame;
 };
 
 int main() {
