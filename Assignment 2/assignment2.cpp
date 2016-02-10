@@ -23,11 +23,12 @@ static const int CANNON_LENGTH = 20;
 static const float CURSOR_VELOCITY = 300; 		// velocity is in pixels/second
 static const float SHOT_VELOCITY = 300;
 
-static const ColourRGB& CURSOR_COLOUR = ColourRGB(149, 165, 166);		// Grey
+static const ColourRGB& CURSOR_COLOUR = ColourRGB(149, 165, 166);		// Light Grey
 static const ColourRGB& SHOT_COLOUR = ColourRGB(255, 255, 255);			// White
 static const ColourRGB& BACKGROUND_COLOUR = ColourRGB(30, 30, 30);	// Charcoal
 static const ColourRGB& GROUND_COLOUR = ColourRGB(52,73,94);				// Navy
 static const ColourRGB& BASE_COLOUR = ColourRGB(39, 174, 96);				// Green
+static const ColourRGB& CANNON_COLOUR = ColourRGB(127, 140, 141);		// Dark Grey
 static const ColourRGB EXPLOSION_COLOUR[] = {
 	ColourRGB(192, 57, 43),	// Red
 	ColourRGB(241,196,15),	// Blue
@@ -219,12 +220,12 @@ private:
 			CANNON_BASE.x, CANNON_BASE.y,
 			cannon_end.x, cannon_end.y,
 			CANNON_THICKNESS,
-			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
+			CANNON_COLOUR.r, CANNON_COLOUR.g, CANNON_COLOUR.b, 255);
 		filledTrigonRGBA(renderer,
 			CANVAS_SIZE_X/2 - 30, CANVAS_SIZE_Y - 26,
 			CANVAS_SIZE_X/2, CANVAS_SIZE_Y - 52,
 			CANVAS_SIZE_X/2 + 30, CANVAS_SIZE_Y - 26,
-			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
+			CANNON_COLOUR.r, CANNON_COLOUR.g, CANNON_COLOUR.b, 255);
 
 		// Draw explosion
 		if (boom) {
