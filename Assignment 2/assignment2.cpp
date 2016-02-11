@@ -22,7 +22,7 @@ static const int CANNON_THICKNESS = 15;
 static const int CANNON_LENGTH = 20;
 static const float CURSOR_VELOCITY = 300; 		// velocity is in pixels/second
 static const float SHOT_VELOCITY = 300;
-static const float MISSILE_VELOCITY = 50; 
+static const float MISSILE_VELOCITY = 75; 
 
 static const ColourRGB& MISSILE_COLOUR = ColourRGB(255, 255, 255);	// White
 static const ColourRGB& CURSOR_COLOUR = ColourRGB(149, 165, 166);		// Light Grey
@@ -61,6 +61,10 @@ public:
 		missile_endpoint = MISSILE_SPAWNPOINT;
 		missile_target = BASE_1_LOCATION;
 		missile_on_screen = true;
+		base_1_alive = true;
+		base_2_alive = true;
+		base_3_alive = true;
+		base_4_alive = true;
 	}
 	
 	void frame_loop(SDL_Renderer* r) {
@@ -192,13 +196,11 @@ private:
 			BACKGROUND_COLOUR.r, BACKGROUND_COLOUR.g, BACKGROUND_COLOUR.b, 255);
 		SDL_RenderClear(renderer);
 
-
-
-
 		// Draw missile
 		if (missile_on_screen == true) {
 			// Reset missile if collides with base
 			if (abs(missile_endpoint.x - BASE_1_LOCATION.x) < 3 && abs(missile_endpoint.y - BASE_1_LOCATION.y) < 3) {
+				base_1_alive = false;
 				missile_on_screen = false;
 			}
 			drawMissile(renderer, MISSILE_SPAWNPOINT, missile_target, frame_delta_ms);
@@ -216,7 +218,6 @@ private:
 			missile_on_screen = false;
 		}
 
-
 		// Draw ground
 		boxRGBA(renderer,
 			CANVAS_SIZE_X, CANVAS_SIZE_Y - 25,
@@ -224,22 +225,30 @@ private:
 			GROUND_COLOUR.r, GROUND_COLOUR.g, GROUND_COLOUR.b, 255);
 
 		// Draw bases
-		boxRGBA(renderer,
+		if (base_1_alive) {
+			boxRGBA(renderer,
 			1*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
 			1*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
 			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
-		boxRGBA(renderer,
+		}
+		if (base_2_alive) {
+			boxRGBA(renderer,
 			3*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
 			3*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
 			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
-		boxRGBA(renderer,
+		}
+		if (base_3_alive) {
+			boxRGBA(renderer,
 			6*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
 			6*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
 			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
-		boxRGBA(renderer,
+		}
+		if (base_4_alive) {
+			boxRGBA(renderer,
 			8*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
 			8*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
 			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
+		}		
 
 		// Draw shot
 		if (can_shoot == false) {
@@ -296,7 +305,8 @@ private:
 	Vector2d cursor_position, cursor_direction, shot_position, 
 	shot_direction, cannon_direction, cannon_end, target_position, 
 	explosion_position, missile_target, missile_endpoint;
-	bool can_shoot, boom, missile_on_screen;
+	bool can_shoot, boom, missile_on_screen,
+	base_1_alive, base_2_alive, base_3_alive, base_4_alive;
 	int explosion_time, explosion_frame;
 };
 

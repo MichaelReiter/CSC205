@@ -1,5 +1,7 @@
 TODO
 
-- Add missiles
+- Add missile targeting next bases
 - Add base destruction
+- Add increasing difficulty
 - Add mouse interaction to spawn missiles
+- Add infinite difficulty scaling
