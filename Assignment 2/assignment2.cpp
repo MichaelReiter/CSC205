@@ -41,7 +41,12 @@ static const unsigned int EXPLOSION_RADIUS = 40;
 static const Vector2d CANNON_BASE = Vector2d(WINDOW_SIZE_X/2, WINDOW_SIZE_Y-43);
 static const Vector2d MISSILE_SPAWNPOINT = Vector2d(WINDOW_SIZE_X/4, 0);
 
-static Vector2d BASE_1_LOCATION = Vector2d(WINDOW_SIZE_X/10 + 50, WINDOW_SIZE_Y-51);
+static Vector2d BASE_LOCATION[] = {
+	Vector2d(WINDOW_SIZE_X/10 + 50, WINDOW_SIZE_Y-51),
+	Vector2d(3*WINDOW_SIZE_X/10 + 50, WINDOW_SIZE_Y-51),
+	Vector2d(6*WINDOW_SIZE_X/10 + 50, WINDOW_SIZE_Y-51),
+	Vector2d(8*WINDOW_SIZE_X/10 + 50, WINDOW_SIZE_Y-51)
+};
 
 class A2Canvas {
 public:
@@ -58,13 +63,14 @@ public:
 		boom = false;
 		explosion_time = EXPLOSION_RADIUS;
 		explosion_frame = 0;
+		targeted_base = 0;
 		missile_endpoint = MISSILE_SPAWNPOINT;
-		missile_target = BASE_1_LOCATION;
+		missile_target = BASE_LOCATION[targeted_base];
 		missile_on_screen = true;
-		base_1_alive = true;
-		base_2_alive = true;
-		base_3_alive = true;
-		base_4_alive = true;
+		base_alive[0] = true;
+		base_alive[1] = true;
+		base_alive[2] = true;
+		base_alive[3] = true;
 	}
 	
 	void frame_loop(SDL_Renderer* r) {
@@ -199,8 +205,10 @@ private:
 		// Draw missile
 		if (missile_on_screen == true) {
 			// Reset missile if collides with base
-			if (abs(missile_endpoint.x - BASE_1_LOCATION.x) < 3 && abs(missile_endpoint.y - BASE_1_LOCATION.y) < 3) {
-				base_1_alive = false;
+			if (abs(missile_endpoint.x - missile_target.x) < 3 && abs(missile_endpoint.y - missile_target.y) < 3) {
+				base_alive[targeted_base] = false;
+				targeted_base++;
+				missile_target = BASE_LOCATION[targeted_base];
 				missile_on_screen = false;
 			}
 			drawMissile(renderer, MISSILE_SPAWNPOINT, missile_target, frame_delta_ms);
@@ -225,25 +233,25 @@ private:
 			GROUND_COLOUR.r, GROUND_COLOUR.g, GROUND_COLOUR.b, 255);
 
 		// Draw bases
-		if (base_1_alive) {
+		if (base_alive[0]) {
 			boxRGBA(renderer,
 			1*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
 			1*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
 			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
 		}
-		if (base_2_alive) {
+		if (base_alive[1]) {
 			boxRGBA(renderer,
 			3*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
 			3*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
 			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
 		}
-		if (base_3_alive) {
+		if (base_alive[2]) {
 			boxRGBA(renderer,
 			6*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
 			6*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
 			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
 		}
-		if (base_4_alive) {
+		if (base_alive[3]) {
 			boxRGBA(renderer,
 			8*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
 			8*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
@@ -305,9 +313,9 @@ private:
 	Vector2d cursor_position, cursor_direction, shot_position, 
 	shot_direction, cannon_direction, cannon_end, target_position, 
 	explosion_position, missile_target, missile_endpoint;
-	bool can_shoot, boom, missile_on_screen,
-	base_1_alive, base_2_alive, base_3_alive, base_4_alive;
-	int explosion_time, explosion_frame;
+	bool can_shoot, boom, missile_on_screen;
+	bool base_alive[4];
+	int explosion_time, explosion_frame, targeted_base;
 };
 
 int main() {
