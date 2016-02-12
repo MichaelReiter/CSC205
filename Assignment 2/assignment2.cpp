@@ -39,8 +39,6 @@ static const int EXPLOSION_COLOURS_LENGTH = sizeof(EXPLOSION_COLOUR) / sizeof(EX
 static const unsigned int EXPLOSION_RADIUS = 40;
 
 static const Vector2d CANNON_BASE = Vector2d(WINDOW_SIZE_X/2, WINDOW_SIZE_Y-43);
-static const Vector2d MISSILE_SPAWNPOINT = Vector2d(WINDOW_SIZE_X/4, 0);
-
 static Vector2d BASE_LOCATION[] = {
 	Vector2d(WINDOW_SIZE_X/10 + 50, WINDOW_SIZE_Y-51),
 	Vector2d(3*WINDOW_SIZE_X/10 + 50, WINDOW_SIZE_Y-51),
@@ -64,13 +62,15 @@ public:
 		explosion_time = EXPLOSION_RADIUS;
 		explosion_frame = 0;
 		targeted_base = 0;
-		missile_endpoint = MISSILE_SPAWNPOINT;
+		missile_spawnpoint = Vector2d(WINDOW_SIZE_X/8, 0);
+		missile_endpoint = missile_spawnpoint;
 		missile_target = BASE_LOCATION[targeted_base];
 		missile_on_screen = true;
 		base_alive[0] = true;
 		base_alive[1] = true;
 		base_alive[2] = true;
 		base_alive[3] = true;
+		gameOver = false;
 	}
 	
 	void frame_loop(SDL_Renderer* r) {
@@ -108,6 +108,10 @@ public:
 			
 			draw(r,delta_ms);
 			
+			if (gameOver) {
+				return;
+			}
+
 			last_frame = current_frame;
 			frame_number++;
 		}
@@ -211,10 +215,10 @@ private:
 				missile_target = BASE_LOCATION[targeted_base];
 				missile_on_screen = false;
 			}
-			drawMissile(renderer, MISSILE_SPAWNPOINT, missile_target, frame_delta_ms);
+			drawMissile(renderer, missile_spawnpoint, missile_target, frame_delta_ms);
 		} else {
 			// reset and fire again
-			missile_endpoint = MISSILE_SPAWNPOINT;
+			missile_endpoint = missile_spawnpoint;
 			missile_on_screen = true;
 		}
 
@@ -256,7 +260,9 @@ private:
 			8*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
 			8*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
 			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
-		}		
+		} else {
+			gameOver = true;
+		}
 
 		// Draw shot
 		if (can_shoot == false) {
@@ -312,8 +318,9 @@ private:
 
 	Vector2d cursor_position, cursor_direction, shot_position, 
 	shot_direction, cannon_direction, cannon_end, target_position, 
-	explosion_position, missile_target, missile_endpoint;
-	bool can_shoot, boom, missile_on_screen;
+	explosion_position, missile_target, missile_endpoint,
+	missile_spawnpoint;
+	bool can_shoot, boom, missile_on_screen, gameOver;
 	bool base_alive[4];
 	int explosion_time, explosion_frame, targeted_base;
 };
