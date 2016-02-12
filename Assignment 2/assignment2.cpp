@@ -198,6 +198,15 @@ private:
 			MISSILE_COLOUR.r, MISSILE_COLOUR.g, MISSILE_COLOUR.b, 255);
 	}
 
+	void destroyBase() {
+		boom = true;
+		explosion_position = missile_target;
+		base_alive[targeted_base] = false;
+		targeted_base++;
+		missile_target = BASE_LOCATION[targeted_base];
+		missile_on_screen = false;
+	}
+
 	void draw(SDL_Renderer *renderer, float frame_delta_ms) {
 		float frame_delta_seconds = frame_delta_ms/1000.0;
 
@@ -210,10 +219,7 @@ private:
 		if (missile_on_screen == true) {
 			// Reset missile if collides with base
 			if (abs(missile_endpoint.x - missile_target.x) < 3 && abs(missile_endpoint.y - missile_target.y) < 3) {
-				base_alive[targeted_base] = false;
-				targeted_base++;
-				missile_target = BASE_LOCATION[targeted_base];
-				missile_on_screen = false;
+				destroyBase();
 			}
 			drawMissile(renderer, missile_spawnpoint, missile_target, frame_delta_ms);
 		} else {
