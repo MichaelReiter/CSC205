@@ -7,6 +7,7 @@
   I've made a lot of special modifications myself. 
 
   Michael Reiter 2016
+  Base code adapted from example by B. Bird.
 */
 #include <iostream>
 #include <vector>
