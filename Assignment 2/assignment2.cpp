@@ -218,7 +218,7 @@ private:
 
 	void destroyBase(int base) {
 		boom = true;
-		explosion_position = missile_target;
+		explosion_position = BASE_LOCATION[base];
 		base_alive[base] = false;
 		missile_on_screen = false;
 	}
