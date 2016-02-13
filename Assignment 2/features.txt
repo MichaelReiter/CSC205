@@ -1,5 +1,5 @@
 25
-Basic functionality: The program contains a frame loop to redraw all objects on screen at regular intervals, and the frame rate of the program is su cient for smooth animation. The program must demonstrate the ability to draw multiple sprites of various types (rectangles, circles, lines, etc.) at some point during its operation. It is not necessary for multiple sprites to always be visible. The program contains at least one animated sprite (such as a bouncing ball) which is animated smoothly without direct user intervention (that is, there must be at least one example of non-user-controlled animation).
+Basic functionality: The program contains a frame loop to redraw all objects on screen at regular intervals, and the frame rate of the program is sufficient for smooth animation. The program must demonstrate the ability to draw multiple sprites of various types (rectangles, circles, lines, etc.) at some point during its operation. It is not necessary for multiple sprites to always be visible. The program contains at least one animated sprite (such as a bouncing ball) which is animated smoothly without direct user intervention (that is, there must be at least one example of non-user-controlled animation).
 
 10
 Sprite appearances are animated (that is, the appearance of each sprite changes over time, instead of just its position and orientation).

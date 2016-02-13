@@ -3,6 +3,9 @@
   A simple game similar to Missile Command built using SDL
   to demonstrate the use of a low level 2D graphics API.
 
+  She may not look like much, but she's got it where it counts, kid.
+  I've made a lot of special modifications myself. 
+
   Michael Reiter 2016
 */
 #include <iostream>
@@ -70,6 +73,7 @@ public:
 		base_alive[1] = true;
 		base_alive[2] = true;
 		base_alive[3] = true;
+		gameOverTimer = 0;
 		gameOver = false;
 	}
 	
@@ -290,7 +294,10 @@ private:
 			8*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
 			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
 		} else if (!base_alive[0] && !base_alive[1] && !base_alive[2]) {
-			gameOver = true;
+			gameOverTimer++;
+			if (gameOverTimer > 30) {
+				gameOver = true;
+			}
 		}
 
 		// Draw shot
@@ -351,7 +358,8 @@ private:
 	missile_spawnpoint;
 	bool can_shoot, boom, missile_on_screen, gameOver;
 	bool base_alive[4];
-	int explosion_time, explosion_frame, targeted_base, missile_velocity;
+	int explosion_time, explosion_frame, targeted_base, missile_velocity,
+	gameOverTimer;
 };
 
 int main() {
