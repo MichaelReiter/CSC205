@@ -22,7 +22,6 @@ static const int CANNON_THICKNESS = 15;
 static const int CANNON_LENGTH = 20;
 static const float CURSOR_VELOCITY = 300; 		// velocity is in pixels/second
 static const float SHOT_VELOCITY = 300;
-static const float MISSILE_VELOCITY = 75; 
 
 static const ColourRGB& MISSILE_COLOUR = ColourRGB(255, 255, 255);	// White
 static const ColourRGB& CURSOR_COLOUR = ColourRGB(149, 165, 166);		// Light Grey
@@ -62,6 +61,7 @@ public:
 		explosion_time = EXPLOSION_RADIUS;
 		explosion_frame = 0;
 		targeted_base = 0;
+		missile_velocity = 100;
 		missile_spawnpoint = Vector2d(WINDOW_SIZE_X/8, 0);
 		missile_endpoint = missile_spawnpoint;
 		missile_target = BASE_LOCATION[targeted_base];
@@ -144,6 +144,7 @@ private:
 	}
 
 	void handle_mouse_down(int x, int y, int button) {
+		
 	}
 
 	void handle_mouse_up(int x, int y, int button) {
@@ -187,9 +188,8 @@ private:
 	void drawMissile(SDL_Renderer* renderer, Vector2d startpoint, Vector2d endpoint, float frame_delta_ms) {
 		// Update missile location
 		float frame_delta_seconds = frame_delta_ms/1000.0;
-		float missile_position_delta = frame_delta_seconds * MISSILE_VELOCITY;
+		float missile_position_delta = frame_delta_seconds * missile_velocity;
 		Vector2d missile_direction = endpoint - startpoint;
-
 		missile_endpoint = missile_endpoint + missile_position_delta*missile_direction.normalize();
 
 		lineRGBA(renderer,
@@ -234,6 +234,7 @@ private:
 			&& abs(missile_endpoint.x - explosion_position.x) < explosion_bounds
 			&& abs(missile_endpoint.y - explosion_position.y) < explosion_bounds) {
 			missile_on_screen = false;
+			missile_velocity += 25;
 		}
 
 		// Draw ground
@@ -328,7 +329,7 @@ private:
 	missile_spawnpoint;
 	bool can_shoot, boom, missile_on_screen, gameOver;
 	bool base_alive[4];
-	int explosion_time, explosion_frame, targeted_base;
+	int explosion_time, explosion_frame, targeted_base, missile_velocity;
 };
 
 int main() {

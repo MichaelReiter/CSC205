@@ -1,6 +1,7 @@
 /* vector2d.h
 
-   B. Bird and Michael Reiter - 01/02/2016
+  B. Bird and Michael Reiter - 01/02/2016
+
 */
 
 #ifndef VECTOR2D_H
