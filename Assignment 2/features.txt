@@ -1,0 +1,23 @@
+25
+Basic functionality: The program contains a frame loop to redraw all objects on screen at regular intervals, and the frame rate of the program is su cient for smooth animation. The program must demonstrate the ability to draw multiple sprites of various types (rectangles, circles, lines, etc.) at some point during its operation. It is not necessary for multiple sprites to always be visible. The program contains at least one animated sprite (such as a bouncing ball) which is animated smoothly without direct user intervention (that is, there must be at least one example of non-user-controlled animation).
+
+10
+Sprite appearances are animated (that is, the appearance of each sprite changes over time, instead of just its position and orientation).
+
+5
+Moving objects have a visible rotational component (such as a circle with a rotating texture or a non-circular object which is visibly rotating).
+
+15
+The user can interact directly with moving objects using the keyboard (for example, by controlling a sprite using the arrow keys). For full marks, both single and continuous events (that is, keys being held down) but be defined.
+
+15
+The user can interact directly with the objects in the playing field using the mouse. This can be implemented in different ways, including allowing the user to click on existing objects to interact with them or associating a sprite with the mouse cursor and having that sprite influence other objects. For full marks, both motion and button events must be defined.
+
+25
+A moving object in the playing field is affected by collisions with other (moving or stationary) objects and the bounds of the drawing canvas. For full marks, at least two different types of objects (e.g. circles and rectangles) must have defined interactions.
+
+10
+The playing field contains multiple moving objects, which are influenced by collisions with each other and stationary objects.
+
+20
+For games: The game has well defined rules and objectives, and challenges the user. The game should either have a defined ‘winning’ condition or should escalate in difficulty indefinitely. The controls should also be intuitive and easy for new users to understand.

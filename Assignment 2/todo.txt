@@ -1,4 +1,5 @@
 TODO
 
+- Destroy out of bounds shot
 - Add delay after final base is destroyed
 - Add mouse interaction to spawn missiles

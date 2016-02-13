@@ -1,7 +1,7 @@
 /* assignment2.cpp
 
   A simple game similar to Missile Command built using SDL
-  to demonstrate the use of a 2D graphics API.
+  to demonstrate the use of a low level 2D graphics API.
 
   Michael Reiter 2016
 */
@@ -61,7 +61,7 @@ public:
 		explosion_time = EXPLOSION_RADIUS;
 		explosion_frame = 0;
 		targeted_base = 0;
-		missile_velocity = 100;
+		missile_velocity = 50;
 		missile_spawnpoint = Vector2d(WINDOW_SIZE_X/8, 0);
 		missile_endpoint = missile_spawnpoint;
 		missile_target = BASE_LOCATION[targeted_base];
@@ -144,7 +144,24 @@ private:
 	}
 
 	void handle_mouse_down(int x, int y, int button) {
-		
+		// if (abs(x - missile_target.x) < 30 && abs(y - missile_target.y) < 30) {
+		// 	
+		// }
+
+		// Destroy bases if they are clicked
+		if (base_alive[0] && x > 1*(CANVAS_SIZE_X/10) && x < 1*(CANVAS_SIZE_X/10) + 100
+			&& y > CANVAS_SIZE_Y - 50 && y < CANVAS_SIZE_Y - 26) {
+			destroyBase(0);
+		} else if (base_alive[1] && x > 3*(CANVAS_SIZE_X/10) && x < 3*(CANVAS_SIZE_X/10) + 100
+			&& y > CANVAS_SIZE_Y - 50 && y < CANVAS_SIZE_Y - 26) {
+			destroyBase(1);
+		} else if (base_alive[2] && x > 6*(CANVAS_SIZE_X/10) && x < 6*(CANVAS_SIZE_X/10) + 100
+			&& y > CANVAS_SIZE_Y - 50 && y < CANVAS_SIZE_Y - 26) {
+			destroyBase(2);
+		} else if (base_alive[3] && x > 8*(CANVAS_SIZE_X/10) && x < 8*(CANVAS_SIZE_X/10) + 100
+			&& y > CANVAS_SIZE_Y - 50 && y < CANVAS_SIZE_Y - 26) {
+			destroyBase(3);
+		}
 	}
 
 	void handle_mouse_up(int x, int y, int button) {
@@ -198,10 +215,10 @@ private:
 			MISSILE_COLOUR.r, MISSILE_COLOUR.g, MISSILE_COLOUR.b, 255);
 	}
 
-	void destroyBase() {
+	void destroyBase(int base) {
 		boom = true;
 		explosion_position = missile_target;
-		base_alive[targeted_base] = false;
+		base_alive[base] = false;
 		targeted_base++;
 		missile_target = BASE_LOCATION[targeted_base];
 		missile_on_screen = false;
@@ -219,7 +236,7 @@ private:
 		if (missile_on_screen == true) {
 			// Reset missile if collides with base
 			if (abs(missile_endpoint.x - missile_target.x) < 3 && abs(missile_endpoint.y - missile_target.y) < 3) {
-				destroyBase();
+				destroyBase(targeted_base);
 			}
 			drawMissile(renderer, missile_spawnpoint, missile_target, frame_delta_ms);
 		} else {
