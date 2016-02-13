@@ -98,9 +98,6 @@ public:
 					case SDL_MOUSEBUTTONDOWN:
 						handle_mouse_down(e.button.x, e.button.y, e.button.button);
 						break;
-					case SDL_MOUSEBUTTONUP:		
-						handle_mouse_up(e.button.x, e.button.y, e.button.button);
-						break;
 					default:
 						break;
 				}
@@ -143,12 +140,8 @@ private:
 		}
 	}
 
+	// Destroy bases if they are clicked
 	void handle_mouse_down(int x, int y, int button) {
-		// if (abs(x - missile_target.x) < 30 && abs(y - missile_target.y) < 30) {
-		// 	
-		// }
-
-		// Destroy bases if they are clicked
 		if (base_alive[0] && x > 1*(CANVAS_SIZE_X/10) && x < 1*(CANVAS_SIZE_X/10) + 100
 			&& y > CANVAS_SIZE_Y - 50 && y < CANVAS_SIZE_Y - 26) {
 			destroyBase(0);
@@ -162,9 +155,17 @@ private:
 			&& y > CANVAS_SIZE_Y - 50 && y < CANVAS_SIZE_Y - 26) {
 			destroyBase(3);
 		}
-	}
 
-	void handle_mouse_up(int x, int y, int button) {
+		// target remaining bases
+		if (base_alive[0]) {
+			targetBase(0);
+		} else if (base_alive[1]) {
+			targetBase(1);
+		} else if (base_alive[2]) {
+			targetBase(2);
+		} else if (base_alive[3]) {
+			targetBase(3);
+		}
 	}
 
 	void handle_mouse_moved(int x, int y) {
@@ -219,9 +220,12 @@ private:
 		boom = true;
 		explosion_position = missile_target;
 		base_alive[base] = false;
-		targeted_base++;
-		missile_target = BASE_LOCATION[targeted_base];
 		missile_on_screen = false;
+	}
+
+	void targetBase(int base) {
+		targeted_base = base;
+		missile_target = BASE_LOCATION[targeted_base];
 	}
 
 	void draw(SDL_Renderer *renderer, float frame_delta_ms) {
@@ -237,6 +241,7 @@ private:
 			// Reset missile if collides with base
 			if (abs(missile_endpoint.x - missile_target.x) < 3 && abs(missile_endpoint.y - missile_target.y) < 3) {
 				destroyBase(targeted_base);
+				targetBase(targeted_base+1);
 			}
 			drawMissile(renderer, missile_spawnpoint, missile_target, frame_delta_ms);
 		} else {
@@ -284,7 +289,7 @@ private:
 			8*(CANVAS_SIZE_X/10) + 100, CANVAS_SIZE_Y - 50,
 			8*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
 			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
-		} else {
+		} else if (!base_alive[0] && !base_alive[1] && !base_alive[2]) {
 			gameOver = true;
 		}
 
