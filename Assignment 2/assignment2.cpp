@@ -172,7 +172,13 @@ private:
 		}
 	}
 
+	// Destroy missile if mouse moves near it
 	void handle_mouse_moved(int x, int y) {
+		if (abs(missile_endpoint.x - x) < 15
+			&& abs(missile_endpoint.y - y) < 15) {
+			missile_on_screen = false;
+			missile_velocity += 10;
+		}
 	}
 
 	void fire_shot(Vector2d target) {
@@ -260,7 +266,7 @@ private:
 			&& abs(missile_endpoint.x - explosion_position.x) < explosion_bounds
 			&& abs(missile_endpoint.y - explosion_position.y) < explosion_bounds) {
 			missile_on_screen = false;
-			missile_velocity += 25;
+			missile_velocity += 10;
 		}
 
 		// Draw ground
@@ -294,6 +300,7 @@ private:
 			8*(CANVAS_SIZE_X/10), CANVAS_SIZE_Y - 26,
 			BASE_COLOUR.r, BASE_COLOUR.g, BASE_COLOUR.b, 255);
 		} else if (!base_alive[0] && !base_alive[1] && !base_alive[2]) {
+			// Half second delay so the final explosion animation can be seen
 			gameOverTimer++;
 			if (gameOverTimer > 30) {
 				gameOver = true;
