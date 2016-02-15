@@ -42,6 +42,7 @@ static const ColourRGB EXPLOSION_COLOUR[] = {
 static const int EXPLOSION_COLOURS_LENGTH = sizeof(EXPLOSION_COLOUR) / sizeof(EXPLOSION_COLOUR[0]);
 static const unsigned int EXPLOSION_RADIUS = 40;
 
+static const Vector2d STR_LOCATION = Vector2d(WINDOW_SIZE_X - 230, 50);
 static const Vector2d CHARACTER_LOCATION = Vector2d(WINDOW_SIZE_X - 100, 100);
 static const Vector2d CANNON_BASE = Vector2d(WINDOW_SIZE_X/2, WINDOW_SIZE_Y-43);
 static Vector2d BASE_LOCATION[] = {
@@ -50,6 +51,9 @@ static Vector2d BASE_LOCATION[] = {
 	Vector2d(6*WINDOW_SIZE_X/10 + 50, WINDOW_SIZE_Y-51),
 	Vector2d(8*WINDOW_SIZE_X/10 + 50, WINDOW_SIZE_Y-51)
 };
+
+static const char STR[] = "BASES REMAINING: ";
+static const int STR_LENGTH = sizeof(STR) / sizeof(STR[0]);
 
 class A2Canvas {
 public:
@@ -251,9 +255,16 @@ private:
 			BACKGROUND_COLOUR.r, BACKGROUND_COLOUR.g, BACKGROUND_COLOUR.b, 255);
 		SDL_RenderClear(renderer);
 
-		// Draw bases_remaining
+		// Draw remaining bases words
+		int i;
+		for (i = 0; i < STR_LENGTH; i++) {
+			characterRGBA(renderer,
+			STR_LOCATION.x + i*10, STR_LOCATION.y,
+			STR[i],
+			CHARACTER_COLOUR.r, CHARACTER_COLOUR.g, CHARACTER_COLOUR.b, 255);
+		}
 		characterRGBA(renderer,
-			CHARACTER_LOCATION.x, CHARACTER_LOCATION.y,
+			STR_LOCATION.x + i*10, STR_LOCATION.y,
 			bases_remaining + '0',
 			CHARACTER_COLOUR.r, CHARACTER_COLOUR.g, CHARACTER_COLOUR.b, 255);
 
