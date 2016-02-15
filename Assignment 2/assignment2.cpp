@@ -27,7 +27,7 @@ static const int CANNON_LENGTH = 20;
 static const float CURSOR_VELOCITY = 300; 		// velocity is in pixels/second
 static const float SHOT_VELOCITY = 300;
 
-static const ColourRGB& CHARACTER_COLOUR = ColourRGB(255, 255, 255);	// White
+static const ColourRGB& STR_COLOUR = ColourRGB(255, 255, 255);	// White
 static const ColourRGB& MISSILE_COLOUR = ColourRGB(255, 255, 255);	// White
 static const ColourRGB& CURSOR_COLOUR = ColourRGB(149, 165, 166);		// Light Grey
 static const ColourRGB& SHOT_COLOUR = ColourRGB(255, 255, 255);			// White
@@ -43,7 +43,6 @@ static const int EXPLOSION_COLOURS_LENGTH = sizeof(EXPLOSION_COLOUR) / sizeof(EX
 static const unsigned int EXPLOSION_RADIUS = 40;
 
 static const Vector2d STR_LOCATION = Vector2d(WINDOW_SIZE_X - 230, 50);
-static const Vector2d CHARACTER_LOCATION = Vector2d(WINDOW_SIZE_X - 100, 100);
 static const Vector2d CANNON_BASE = Vector2d(WINDOW_SIZE_X/2, WINDOW_SIZE_Y-43);
 static Vector2d BASE_LOCATION[] = {
 	Vector2d(WINDOW_SIZE_X/10 + 50, WINDOW_SIZE_Y-51),
@@ -261,12 +260,12 @@ private:
 			characterRGBA(renderer,
 			STR_LOCATION.x + i*10, STR_LOCATION.y,
 			STR[i],
-			CHARACTER_COLOUR.r, CHARACTER_COLOUR.g, CHARACTER_COLOUR.b, 255);
+			STR_COLOUR.r, STR_COLOUR.g, STR_COLOUR.b, 255);
 		}
 		characterRGBA(renderer,
 			STR_LOCATION.x + i*10, STR_LOCATION.y,
 			bases_remaining + '0',
-			CHARACTER_COLOUR.r, CHARACTER_COLOUR.g, CHARACTER_COLOUR.b, 255);
+			STR_COLOUR.r, STR_COLOUR.g, STR_COLOUR.b, 255);
 
 		// Draw missile
 		if (missile_on_screen == true) {
