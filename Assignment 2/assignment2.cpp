@@ -27,6 +27,7 @@ static const int CANNON_LENGTH = 20;
 static const float CURSOR_VELOCITY = 300; 		// velocity is in pixels/second
 static const float SHOT_VELOCITY = 300;
 
+static const ColourRGB& CHARACTER_COLOUR = ColourRGB(255, 255, 255);	// White
 static const ColourRGB& MISSILE_COLOUR = ColourRGB(255, 255, 255);	// White
 static const ColourRGB& CURSOR_COLOUR = ColourRGB(149, 165, 166);		// Light Grey
 static const ColourRGB& SHOT_COLOUR = ColourRGB(255, 255, 255);			// White
@@ -41,6 +42,7 @@ static const ColourRGB EXPLOSION_COLOUR[] = {
 static const int EXPLOSION_COLOURS_LENGTH = sizeof(EXPLOSION_COLOUR) / sizeof(EXPLOSION_COLOUR[0]);
 static const unsigned int EXPLOSION_RADIUS = 40;
 
+static const Vector2d CHARACTER_LOCATION = Vector2d(WINDOW_SIZE_X - 100, 100);
 static const Vector2d CANNON_BASE = Vector2d(WINDOW_SIZE_X/2, WINDOW_SIZE_Y-43);
 static Vector2d BASE_LOCATION[] = {
 	Vector2d(WINDOW_SIZE_X/10 + 50, WINDOW_SIZE_Y-51),
@@ -76,6 +78,7 @@ public:
 		base_alive[3] = true;
 		gameOverTimer = 0;
 		gameOver = false;
+		bases_remaining = 4;
 	}
 	
 	void frame_loop(SDL_Renderer* r) {
@@ -232,6 +235,7 @@ private:
 		explosion_position = BASE_LOCATION[base];
 		base_alive[base] = false;
 		missile_on_screen = false;
+		bases_remaining--;
 	}
 
 	void targetBase(int base) {
@@ -246,6 +250,12 @@ private:
 		SDL_SetRenderDrawColor(renderer,
 			BACKGROUND_COLOUR.r, BACKGROUND_COLOUR.g, BACKGROUND_COLOUR.b, 255);
 		SDL_RenderClear(renderer);
+
+		// Draw bases_remaining
+		characterRGBA(renderer,
+			CHARACTER_LOCATION.x, CHARACTER_LOCATION.y,
+			bases_remaining + '0',
+			CHARACTER_COLOUR.r, CHARACTER_COLOUR.g, CHARACTER_COLOUR.b, 255);
 
 		// Draw missile
 		if (missile_on_screen == true) {
@@ -367,7 +377,7 @@ private:
 	bool can_shoot, boom, missile_on_screen, gameOver;
 	bool base_alive[4];
 	int explosion_time, explosion_frame, targeted_base, missile_velocity,
-	gameOverTimer;
+	gameOverTimer, bases_remaining;
 };
 
 int main() {
