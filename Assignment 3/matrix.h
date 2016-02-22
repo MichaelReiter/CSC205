@@ -36,11 +36,10 @@ public:
 	
 	//Create a matrix from a pointer to a (row or column major) array with stride bytes between the beginning of each row (or column if column major is used)
 	GeneralMatrix(EntryType *Entries,int stride,bool rowMajor = true){
-		EntryType (*entryData)[stride] = (EntryType(*)[stride])Entries;
 		int i,j;
 		for (i = 0; i < m; i++)
 			for(j = 0; j < n; j++)
-				Entry(i,j) = rowMajor? entryData[i][j]: entryData[j][i];
+				Entry(i,j) = rowMajor? Entries[i*stride+j]: Entries[j*stride+i];
 	}
 	
 	//Copy Constructors
@@ -259,14 +258,14 @@ public:
 class Vector3: public Vector<3>{
 public:
 	typedef typename Vector<3>::EntryType EntryType;
-	Vector3(): Vector<3>(), x(entries[0][0]), y(entries[0][1]), z(entries[0][2]) {}
-	Vector3(EntryType e[3]): Vector<3>(e), x(entries[0][0]), y(entries[0][1]), z(entries[0][2]){}
-	Vector3(EntryType x, EntryType y, EntryType z):  x(entries[0][0]), y(entries[0][1]), z(entries[0][2]){
+	Vector3(): Vector<3>(), x(entries[0][0]), y(entries[1][0]), z(entries[2][0]) {}
+	Vector3(EntryType e[3]): Vector<3>(e), x(entries[0][0]), y(entries[1][0]), z(entries[2][0]){}
+	Vector3(EntryType x, EntryType y, EntryType z):  x(entries[0][0]), y(entries[1][0]), z(entries[2][0]){
 		this->Entry(0,0) = x;
 		this->Entry(1,0) = y;
 		this->Entry(2,0) = z;
 	}
-	Vector3(const GeneralMatrix<3,1>& other): x(entries[0][0]), y(entries[0][1]), z(entries[0][2]){
+	Vector3(const GeneralMatrix<3,1>& other): x(entries[0][0]), y(entries[1][0]), z(entries[2][0]){
 		this->Entry(0,0) = other.GetEntry(0,0);
 		this->Entry(1,0) = other.GetEntry(1,0);
 		this->Entry(2,0) = other.GetEntry(2,0);
@@ -299,13 +298,13 @@ public:
 class Vector2: public Vector<2>{
 public:
 	typedef typename Vector<2>::EntryType EntryType;
-	Vector2(): Vector<2>(), x(entries[0][0]), y(entries[0][1]) {};
-	Vector2(EntryType e[2]): Vector<2>(e), x(entries[0][0]), y(entries[0][1]){};
-	Vector2(EntryType x, EntryType y): x(entries[0][0]), y(entries[0][1]){
+	Vector2(): Vector<2>(), x(entries[0][0]), y(entries[1][0]) {};
+	Vector2(EntryType e[2]): Vector<2>(e), x(entries[0][0]), y(entries[1][0]){};
+	Vector2(EntryType x, EntryType y): x(entries[0][0]), y(entries[1][0]){
 		this->Entry(0,0) = x;
 		this->Entry(1,0) = y;
 	}
-	Vector2(const GeneralMatrix<2,1>& other): x(entries[0][0]), y(entries[0][1]){
+	Vector2(const GeneralMatrix<2,1>& other): x(entries[0][0]), y(entries[1][0]){
 		this->Entry(0,0) = other.GetEntry(0,0);
 		this->Entry(1,0) = other.GetEntry(1,0);
 	}
