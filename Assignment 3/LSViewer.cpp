@@ -1,6 +1,7 @@
 /* LSViewer.cpp
 
-   B. Bird - 02/08/2016
+  Michael Reiter and B. Bird - 02/08/2016
+
 */
 #include <iostream>
 #include <vector>
@@ -18,7 +19,6 @@ using namespace std;
 static const int WINDOW_SIZE_X = 800;
 static const int WINDOW_SIZE_Y = 600;
 
-
 class A3Canvas {
 public:
 	A3Canvas(LSystem* L) {
@@ -29,12 +29,12 @@ public:
 	void frame_loop(SDL_Renderer* r) {
 		unsigned int last_frame = SDL_GetTicks();
 		//unsigned int frame_number = 0;
-		draw(r,0);
+		draw(r, 0);
 		while(1) {
 			//cout << "Frame " << frame_number << endl;
 			unsigned int current_frame = SDL_GetTicks();
 			unsigned int delta_ms = current_frame - last_frame;
-			
+
 			SDL_Event e;
 			//Handle all queued events
 			while(SDL_PollEvent(&e)) {
@@ -45,7 +45,7 @@ public:
 					case SDL_KEYDOWN:
 						//e.key stores the key pressed
 						handle_key_down(e.key.keysym.sym);
-						draw(r,delta_ms);
+						draw(r, delta_ms);
 						break;
 					default:
 						break;
@@ -95,19 +95,18 @@ private:
 		float vx[] = {0,1.0 ,1.25,   1,  0,  -1,-1.25,-1};
 		float vy[] = {0,0.75,1.75,2.75,4.0,2.75, 1.75,0.75};
 		int numVerts = 8;
-		tr.fillPolygon(vx, vy, numVerts, 64, 224, 0, 255);
-		tr.drawPolygon(vx, vy, numVerts, 64, 128, 0, 255);
+		tr.fillPolygon(vx, vy, numVerts, 46, 204, 113, 255);
+		tr.drawPolygon(vx, vy, numVerts, 46, 204, 113, 255);
 	}
 
 	void draw(SDL_Renderer *renderer, float frame_delta_ms) {
-	
 		//float frame_delta_seconds = frame_delta_ms/1000.0;
 
 		string ls_string = L_system->GenerateSystemString(LS_iterations);
 		cerr << "Drawing with " << LS_iterations << " iterations." << endl;
 		cerr << "System string: " << ls_string << endl;
 
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+		SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255);
 		SDL_RenderClear(renderer);
 
 		TransformedRenderer tr(renderer);
@@ -115,12 +114,53 @@ private:
 		viewportTransform.identity();
 		viewportTransform *= Translation(WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
 		viewportTransform *= Scale(1,-1);
-		viewportTransform *= Scale(WINDOW_SIZE_X/100.0,WINDOW_SIZE_Y/100.0);
+		viewportTransform *= Scale(WINDOW_SIZE_X/100.0, WINDOW_SIZE_Y/100.0);
 
 		tr.set_transform(viewportTransform);
 
-		//Replace this with actual drawing code...
-		draw_leaf(tr);
+		for (int i = 0; i < ls_string.length(); i++) {
+			switch (ls_string[i]) {
+				case 'L':
+					draw_leaf(tr);
+					break;
+				case 'T': {
+					int h = 10;
+					tr.drawLine(0, 0, 0, h, 10, 153, 112, 79, 255);
+					viewportTransform *= Translation(0, h);
+					break;
+				}
+				case '+':
+					viewportTransform *= Rotation(M_PI/6);
+					break;
+				case '-':
+					viewportTransform *= Rotation(-M_PI/6);
+					break;
+				case 's':
+					
+					break;
+				case 'S':
+					
+					break;
+				case 'h':
+					
+					break;
+				case 'H':
+					
+					break;
+				case 'v':
+					
+					break;
+				case 'V':
+					
+					break;
+				case '[':
+					
+					break;
+				case ']':
+					
+					break;
+			}
+		}
 	
 		SDL_RenderPresent(renderer);
 	}
