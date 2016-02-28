@@ -133,76 +133,84 @@ private:
 
 		TransformedRenderer tr(renderer);
 		Matrix3 viewportTransform;
-		viewportTransform.identity();
-		viewportTransform *= Translation(WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
-		viewportTransform *= Scale(1,-1);
-		viewportTransform *= Scale(WINDOW_SIZE_X/100.0, WINDOW_SIZE_Y/100.0);
 
-		tr.set_transform(viewportTransform);
+		int xPositionModifier = 0.5;
+		for (int k = 1; k <= 3; k++) {
 
-		for (int i = 0; i < ls_string.length(); i++) {
-			switch (ls_string[i]) {
-				case 'L':
-					draw_leaf(tr);
-					break;
-				case 'T': {
-					int h = 10;
-					int w = 10;
-					tr.drawLine(0, 0, 0, h, w, 153, 112, 79, 255);
-					viewportTransform *= Translation(0, h);
-					tr.set_transform(viewportTransform);
-					break;
+			xPositionModifier = k*0.25;
+
+			viewportTransform.identity();
+			viewportTransform *= Translation(WINDOW_SIZE_X*xPositionModifier, WINDOW_SIZE_Y);
+			viewportTransform *= Scale(1,-1);
+			viewportTransform *= Scale(WINDOW_SIZE_X/100.0, WINDOW_SIZE_Y/100.0);
+
+			tr.set_transform(viewportTransform);
+
+			for (int i = 0; i < ls_string.length(); i++) {
+				switch (ls_string[i]) {
+					case 'L':
+						draw_leaf(tr);
+						break;
+					case 'T': {
+						int h = 10;
+						int w = 10;
+						tr.drawLine(0, 0, 0, h, w, 153, 112, 79, 255);
+						viewportTransform *= Translation(0, h);
+						tr.set_transform(viewportTransform);
+						break;
+					}
+					case '+':
+						viewportTransform *= Rotation(-M_PI/6);
+						tr.set_transform(viewportTransform);
+						break;
+					case '-':
+						viewportTransform *= Rotation(M_PI/6);
+						tr.set_transform(viewportTransform);
+						break;
+					case 's':
+						viewportTransform *= Scale(0.9, 0.9);
+						tr.set_transform(viewportTransform);
+						break;
+					case 'S':
+						viewportTransform *= Scale(1/0.9, 1/0.9);
+						tr.set_transform(viewportTransform);
+						break;
+					case 'h':
+						viewportTransform *= Scale(0.9, 1);
+						tr.set_transform(viewportTransform);
+						break;
+					case 'H':
+						viewportTransform *= Scale(1/0.9, 1);
+						tr.set_transform(viewportTransform);
+						break;
+					case 'v':
+						viewportTransform *= Scale(1, 0.9);
+						tr.set_transform(viewportTransform);
+						break;
+					case 'V':
+						viewportTransform *= Scale(1, 1/0.9);
+						tr.set_transform(viewportTransform);
+						break;
+					case '[':
+						transformStack.push(viewportTransform);
+						break;
+					case ']':
+						viewportTransform = transformStack.top();
+						transformStack.pop();
+						tr.set_transform(viewportTransform);
+						break;
+					case 'O':
+						draw_orange(tr);
+						break;
+					case 'A':
+						draw_apple(tr);
+						break;
+					case 'B':
+						draw_banana(tr);
+						break;
 				}
-				case '+':
-					viewportTransform *= Rotation(-M_PI/6);
-					tr.set_transform(viewportTransform);
-					break;
-				case '-':
-					viewportTransform *= Rotation(M_PI/6);
-					tr.set_transform(viewportTransform);
-					break;
-				case 's':
-					viewportTransform *= Scale(0.9, 0.9);
-					tr.set_transform(viewportTransform);
-					break;
-				case 'S':
-					viewportTransform *= Scale(1/0.9, 1/0.9);
-					tr.set_transform(viewportTransform);
-					break;
-				case 'h':
-					viewportTransform *= Scale(0.9, 1);
-					tr.set_transform(viewportTransform);
-					break;
-				case 'H':
-					viewportTransform *= Scale(1/0.9, 1);
-					tr.set_transform(viewportTransform);
-					break;
-				case 'v':
-					viewportTransform *= Scale(1, 0.9);
-					tr.set_transform(viewportTransform);
-					break;
-				case 'V':
-					viewportTransform *= Scale(1, 1/0.9);
-					tr.set_transform(viewportTransform);
-					break;
-				case '[':
-					transformStack.push(viewportTransform);
-					break;
-				case ']':
-					viewportTransform = transformStack.top();
-					transformStack.pop();
-					tr.set_transform(viewportTransform);
-					break;
-				case 'O':
-					draw_orange(tr);
-					break;
-				case 'A':
-					draw_apple(tr);
-					break;
-				case 'B':
-					draw_banana(tr);
-					break;
 			}
+
 		}
 	
 		SDL_RenderPresent(renderer);
