@@ -40,7 +40,7 @@ public:
 		TransformVector(x1,y1,ix1,iy1);
 		TransformVector(x2,y2,ix2,iy2);
 
-		thickLineRGBA(renderer, ix1, iy1, ix2, iy2, width,r,g,b,a);
+		thickLineRGBA(renderer, ix1, iy1, ix2, iy2, width, r, g, b, a);
 	}
 	
 	void drawCircle(float x, float y, float radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
@@ -119,7 +119,7 @@ public:
 		}
 
 		filledPolygonRGBA(renderer, new_vx, new_vy, n, r, g, b, a);
-		
+
 		DEALLOCATE_SINT16_ARRAY(new_vx);
 		DEALLOCATE_SINT16_ARRAY(new_vy);
 	}

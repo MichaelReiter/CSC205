@@ -128,8 +128,13 @@ private:
 		cerr << "Drawing with " << LS_iterations << " iterations." << endl;
 		cerr << "System string: " << ls_string << endl;
 
-		SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255);
-		SDL_RenderClear(renderer);
+		// Draw gradient background
+		int color;
+		for (int j = 0; j < WINDOW_SIZE_Y; j++) {
+			color = (1.0*j/WINDOW_SIZE_Y)*255;
+			SDL_SetRenderDrawColor(renderer, color/3, color/2, color, 255);
+			SDL_RenderDrawLine(renderer, 0, j, WINDOW_SIZE_X, j);
+		}
 
 		TransformedRenderer tr(renderer);
 		Matrix3 viewportTransform;
