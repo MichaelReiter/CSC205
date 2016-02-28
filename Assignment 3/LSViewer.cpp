@@ -8,6 +8,7 @@
 #include <cmath>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
+#include <stack>
 
 #include "LSystem.h"
 #include "matrix.h"
@@ -55,6 +56,7 @@ public:
 	}
 private:
 	int LS_iterations;
+	stack<Matrix3> transformStack;
 	LSystem* L_system;
 	void handle_key_down(SDL_Keycode key) {
 		if (key == SDLK_UP) {
@@ -125,39 +127,50 @@ private:
 					break;
 				case 'T': {
 					int h = 10;
-					tr.drawLine(0, 0, 0, h, 10, 153, 112, 79, 255);
+					int w = 10;
+					tr.drawLine(0, 0, 0, h, w, 153, 112, 79, 255);
 					viewportTransform *= Translation(0, h);
+					tr.set_transform(viewportTransform);
 					break;
 				}
 				case '+':
 					viewportTransform *= Rotation(M_PI/6);
+					tr.set_transform(viewportTransform);
 					break;
 				case '-':
 					viewportTransform *= Rotation(-M_PI/6);
+					tr.set_transform(viewportTransform);
 					break;
 				case 's':
-					
+					viewportTransform *= Scale(0.9, 0.9);
+					tr.set_transform(viewportTransform);
 					break;
 				case 'S':
-					
+					viewportTransform *= Scale(1/0.9, 1/0.9);
+					tr.set_transform(viewportTransform);
 					break;
 				case 'h':
-					
+					viewportTransform *= Scale(0.9, 1);
+					tr.set_transform(viewportTransform);
 					break;
 				case 'H':
-					
+					viewportTransform *= Scale(1/0.9, 1);
+					tr.set_transform(viewportTransform);
 					break;
 				case 'v':
-					
+					viewportTransform *= Scale(1, 0.9);
+					tr.set_transform(viewportTransform);
 					break;
 				case 'V':
-					
+					viewportTransform *= Scale(1, 1/0.9);
+					tr.set_transform(viewportTransform);
 					break;
 				case '[':
-					
+					transformStack.push(viewportTransform);
 					break;
 				case ']':
-					
+					tr.set_transform(transformStack.top());
+					transformStack.pop();
 					break;
 			}
 		}
