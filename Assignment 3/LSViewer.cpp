@@ -101,6 +101,26 @@ private:
 		tr.drawPolygon(vx, vy, numVerts, 46, 204, 113, 255);
 	}
 
+	void draw_apple(TransformedRenderer& tr) {
+		float vx[] = {0, 1.0,1.25,   1,0.25,   0,  -1,-1.25,-1.0};
+		float vy[] = {0,0.75,1.75,2.75, 3.0, 2.5,2.75, 1.75,0.75};
+		int numVerts = 9;
+		tr.fillPolygon(vx, vy, numVerts, 217, 30, 24, 255);
+		tr.drawPolygon(vx, vy, numVerts, 217, 30, 24, 255);
+	}
+
+	void draw_orange(TransformedRenderer& tr) {
+		tr.fillCircle(0, 0, 2, 248, 148, 6, 255);
+	}
+
+	void draw_banana(TransformedRenderer& tr) {
+		float vx[] = {0,  1.0, 1.5,  1.0, 0,  0.25, 0.75, 0.25};
+		float vy[] = {-4, -3.25, -2, -0.75, 0,  -1,  -2.0,  -3};
+		int numVerts = 8;
+		tr.fillPolygon(vx, vy, numVerts, 244, 208, 63, 255);
+		tr.drawPolygon(vx, vy, numVerts, 244, 208, 63, 255);
+	}
+
 	void draw(SDL_Renderer *renderer, float frame_delta_ms) {
 		//float frame_delta_seconds = frame_delta_ms/1000.0;
 
@@ -170,8 +190,17 @@ private:
 					break;
 				case ']':
 					viewportTransform = transformStack.top();
-					tr.set_transform(viewportTransform);
 					transformStack.pop();
+					tr.set_transform(viewportTransform);
+					break;
+				case 'O':
+					draw_orange(tr);
+					break;
+				case 'A':
+					draw_apple(tr);
+					break;
+				case 'B':
+					draw_banana(tr);
 					break;
 			}
 		}
