@@ -134,11 +134,11 @@ private:
 					break;
 				}
 				case '+':
-					viewportTransform *= Rotation(M_PI/6);
+					viewportTransform *= Rotation(-M_PI/6);
 					tr.set_transform(viewportTransform);
 					break;
 				case '-':
-					viewportTransform *= Rotation(-M_PI/6);
+					viewportTransform *= Rotation(M_PI/6);
 					tr.set_transform(viewportTransform);
 					break;
 				case 's':
@@ -169,7 +169,8 @@ private:
 					transformStack.push(viewportTransform);
 					break;
 				case ']':
-					tr.set_transform(transformStack.top());
+					viewportTransform = transformStack.top();
+					tr.set_transform(viewportTransform);
 					transformStack.pop();
 					break;
 			}
