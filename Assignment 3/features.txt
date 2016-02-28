@@ -1,10 +1,12 @@
 Done:
-
 25
 Basic rendering: The T and L specifiers work as required, and L-Systems without the save/load specifiers [ and ] render correctly for any number of iterations. All of the required transformations work as required.
 
 10
 The save/load specifiers [ and ] work for any number of iterations and any depth of nesting.
+
+5
+Improved rendering: Gradient or textured rendering is used instead of flat colours.
 
 5
 Interesting inputs: New L-Systems with complicated behavior (and which are your own work) are included in your submission.
@@ -15,14 +17,11 @@ Extra geometric primitives (besides the branch and leaf) are implemented. Demons
 5
 The L-System is rendered more than once in different positions and orientations (for example, to produce a forest instead of a single tree). Transformations are also used to produce perspective or shadow effects.
 
-
-Todo:
-
-5
-Improved rendering: Gradient or textured rendering is used instead of flat colours.
-
 8
 The implementation can render L-Systems beyond the simple branch/tree models used in this specification (for example, you could receive full marks in this section by making your program render all of the examples in the Wikipedia article).
 
+
+
+Todo:
 8
 The implementation allows the window to be resized at any time by the user, and the drawing perspective and aspect ratio are scaled proportionally to fit the new window size.

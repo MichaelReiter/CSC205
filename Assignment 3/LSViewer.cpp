@@ -140,18 +140,18 @@ private:
 		Matrix3 viewportTransform;
 
 		// Render the L-System multiple times in different positions and orientations
-		for (int k = 1; k <= 3; k++) {
+		for (int k = 1; k <= 1; k++) {
 			switch (k) {
 				case 1:
+					viewportTransform.identity();
+					viewportTransform *= Translation(WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
+					viewportTransform *= Scale(1,-1);
+					break;
+				case 2:
 					viewportTransform.identity();
 					viewportTransform *= Translation(WINDOW_SIZE_X*0.25, WINDOW_SIZE_Y*0.8);
 					viewportTransform *= Scale(0.5,-0.5);
 					viewportTransform *= Rotation(-M_PI/15);
-					break;
-				case 2:
-					viewportTransform.identity();
-					viewportTransform *= Translation(WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
-					viewportTransform *= Scale(1,-1);
 					break;
 				case 3:
 					viewportTransform.identity();
@@ -224,6 +224,30 @@ private:
 						break;
 					case 'B':
 						draw_banana(tr);
+						break;
+					case 'C': // Cantor move forward
+						viewportTransform *= Translation(0, 10);
+						break;
+					case 'F': { // Draw forward
+						tr.drawLine(0, 0, 0, 5, 5, 255, 255, 255, 255);
+						viewportTransform *= Translation(0, 5);
+						tr.set_transform(viewportTransform);
+						break;
+					}
+					case 'f': { // Draw forward 2
+						tr.drawLine(0, 0, 0, 5, 5, 255, 255, 255, 255);
+						viewportTransform *= Translation(0, 5);
+						tr.set_transform(viewportTransform);
+						break;
+					}
+					// Rotate 25 degrees for fractal plant
+					case '>':
+						viewportTransform *= Rotation(-5*M_PI/36);
+						tr.set_transform(viewportTransform);
+						break;
+					case '<':
+						viewportTransform *= Rotation(5*M_PI/36);
+						tr.set_transform(viewportTransform);
 						break;
 				}
 			}
