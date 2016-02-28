@@ -17,8 +17,8 @@
 
 using namespace std;
 
-static const int WINDOW_SIZE_X = 800;
-static const int WINDOW_SIZE_Y = 600;
+static int WINDOW_SIZE_X = 800;
+static int WINDOW_SIZE_Y = 600;
 
 class A3Canvas {
 public:
@@ -43,6 +43,9 @@ public:
 					case SDL_QUIT:
 						//Exit immediately
 						return;
+					case SDL_WINDOWEVENT:
+						// cout << e.window.data1 << endl;
+						break;
 					case SDL_KEYDOWN:
 						//e.key stores the key pressed
 						handle_key_down(e.key.keysym.sym);
@@ -275,7 +278,7 @@ int main(int argc, char** argv) {
 	SDL_Window* window = SDL_CreateWindow("CSC 205 A3",
     SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
     WINDOW_SIZE_X, WINDOW_SIZE_Y, 
-		SDL_WINDOW_SHOWN
+		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
 	);
 
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
