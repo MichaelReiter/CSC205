@@ -1,3 +1,5 @@
+Done:
+
 25
 Basic rendering: The T and L specifiers work as required, and L-Systems without the save/load specifiers [ and ] render correctly for any number of iterations. All of the required transformations work as required.
 
@@ -12,6 +14,9 @@ Extra geometric primitives (besides the branch and leaf) are implemented. Demons
 
 5
 The L-System is rendered more than once in different positions and orientations (for example, to produce a forest instead of a single tree). Transformations are also used to produce perspective or shadow effects.
+
+
+Todo:
 
 5
 Improved rendering: Gradient or textured rendering is used instead of flat colours.

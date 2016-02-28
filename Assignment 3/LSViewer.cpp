@@ -97,7 +97,7 @@ private:
 		float vx[] = {0,1.0 ,1.25,   1,  0,  -1,-1.25,-1};
 		float vy[] = {0,0.75,1.75,2.75,4.0,2.75, 1.75,0.75};
 		int numVerts = 8;
-		tr.fillPolygon(vx, vy, numVerts, 46, 204, 113, 255);
+		tr.fillLeaf(vx, vy, numVerts, 46, 204, 113, 255);
 		tr.drawPolygon(vx, vy, numVerts, 46, 204, 113, 255);
 	}
 
