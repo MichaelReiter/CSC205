@@ -134,16 +134,28 @@ private:
 		TransformedRenderer tr(renderer);
 		Matrix3 viewportTransform;
 
-		int xPositionModifier = 0.5;
+		// Render the L-System multiple times in different positions and orientations
 		for (int k = 1; k <= 3; k++) {
-
-			xPositionModifier = k*0.25;
-
-			viewportTransform.identity();
-			viewportTransform *= Translation(WINDOW_SIZE_X*xPositionModifier, WINDOW_SIZE_Y);
-			viewportTransform *= Scale(1,-1);
+			switch (k) {
+				case 1:
+					viewportTransform.identity();
+					viewportTransform *= Translation(WINDOW_SIZE_X*0.25, WINDOW_SIZE_Y*0.8);
+					viewportTransform *= Scale(0.5,-0.5);
+					viewportTransform *= Rotation(-M_PI/15);
+					break;
+				case 2:
+					viewportTransform.identity();
+					viewportTransform *= Translation(WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
+					viewportTransform *= Scale(1,-1);
+					break;
+				case 3:
+					viewportTransform.identity();
+					viewportTransform *= Translation(WINDOW_SIZE_X*0.75, WINDOW_SIZE_Y*0.6);
+					viewportTransform *= Scale(0.5,-0.5);
+					viewportTransform *= Rotation(M_PI/12);
+					break;
+			}
 			viewportTransform *= Scale(WINDOW_SIZE_X/100.0, WINDOW_SIZE_Y/100.0);
-
 			tr.set_transform(viewportTransform);
 
 			for (int i = 0; i < ls_string.length(); i++) {
