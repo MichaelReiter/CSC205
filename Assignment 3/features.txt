@@ -20,8 +20,5 @@ The L-System is rendered more than once in different positions and orientations 
 8
 The implementation can render L-Systems beyond the simple branch/tree models used in this specification (for example, you could receive full marks in this section by making your program render all of the examples in the Wikipedia article).
 
-
-
-Todo:
 8
 The implementation allows the window to be resized at any time by the user, and the drawing perspective and aspect ratio are scaled proportionally to fit the new window size.

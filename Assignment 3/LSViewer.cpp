@@ -44,7 +44,11 @@ public:
 						//Exit immediately
 						return;
 					case SDL_WINDOWEVENT:
-						// cout << e.window.data1 << endl;
+						if (e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+							WINDOW_SIZE_X = e.window.data1;
+							WINDOW_SIZE_Y = e.window.data2;
+							draw(r, delta_ms);
+						}
 						break;
 					case SDL_KEYDOWN:
 						//e.key stores the key pressed
@@ -102,6 +106,10 @@ private:
 		int numVerts = 8;
 		tr.fillLeaf(vx, vy, numVerts, 46, 204, 113, 255);
 		tr.drawPolygon(vx, vy, numVerts, 46, 204, 113, 255);
+	}
+
+	void draw_branch(TransformedRenderer& tr) {
+		tr.fillRectangle(-1, 0, 1, 10, 153, 112, 79, 255);
 	}
 
 	void draw_apple(TransformedRenderer& tr) {
@@ -171,14 +179,11 @@ private:
 					case 'L':
 						draw_leaf(tr);
 						break;
-					case 'T': {
-						int h = 10;
-						int w = 10;
-						tr.drawLine(0, 0, 0, h, w, 153, 112, 79, 255);
-						viewportTransform *= Translation(0, h);
+					case 'T':
+						draw_branch(tr);
+						viewportTransform *= Translation(0, 10);
 						tr.set_transform(viewportTransform);
 						break;
-					}
 					case '+':
 						viewportTransform *= Rotation(-M_PI/6);
 						tr.set_transform(viewportTransform);
