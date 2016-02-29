@@ -17,8 +17,8 @@
 
 using namespace std;
 
-static int WINDOW_SIZE_X = 800;
-static int WINDOW_SIZE_Y = 600;
+static int window_size_x = 800;
+static int window_size_y = 600;
 
 class A3Canvas {
 public:
@@ -45,8 +45,8 @@ public:
 						return;
 					case SDL_WINDOWEVENT:
 						if (e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-							WINDOW_SIZE_X = e.window.data1;
-							WINDOW_SIZE_Y = e.window.data2;
+							window_size_x = e.window.data1;
+							window_size_y = e.window.data2;
 							draw(r, delta_ms);
 						}
 						break;
@@ -141,10 +141,10 @@ private:
 
 		// Draw gradient background
 		int color;
-		for (int j = 0; j < WINDOW_SIZE_Y; j++) {
-			color = (1.0*j/WINDOW_SIZE_Y)*255;
+		for (int j = 0; j < window_size_y; j++) {
+			color = (1.0*j/window_size_y)*255;
 			SDL_SetRenderDrawColor(renderer, color/3, color/2, color, 255);
-			SDL_RenderDrawLine(renderer, 0, j, WINDOW_SIZE_X, j);
+			SDL_RenderDrawLine(renderer, 0, j, window_size_x, j);
 		}
 
 		TransformedRenderer tr(renderer);
@@ -155,23 +155,23 @@ private:
 			switch (k) {
 				case 1:
 					viewportTransform.identity();
-					viewportTransform *= Translation(WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
+					viewportTransform *= Translation(window_size_x/2, window_size_y);
 					viewportTransform *= Scale(1,-1);
 					break;
 				case 2:
 					viewportTransform.identity();
-					viewportTransform *= Translation(WINDOW_SIZE_X*0.25, WINDOW_SIZE_Y*0.8);
+					viewportTransform *= Translation(window_size_x*0.25, window_size_y*0.8);
 					viewportTransform *= Scale(0.5,-0.5);
 					viewportTransform *= Rotation(-M_PI/15);
 					break;
 				case 3:
 					viewportTransform.identity();
-					viewportTransform *= Translation(WINDOW_SIZE_X*0.75, WINDOW_SIZE_Y*0.6);
+					viewportTransform *= Translation(window_size_x*0.75, window_size_y*0.6);
 					viewportTransform *= Scale(0.5,-0.5);
 					viewportTransform *= Rotation(M_PI/12);
 					break;
 			}
-			viewportTransform *= Scale(WINDOW_SIZE_X/100.0, WINDOW_SIZE_Y/100.0);
+			viewportTransform *= Scale(window_size_x/100.0, window_size_y/100.0);
 			tr.set_transform(viewportTransform);
 
 			for (int i = 0; i < ls_string.length(); i++) {
@@ -282,7 +282,7 @@ int main(int argc, char** argv) {
 
 	SDL_Window* window = SDL_CreateWindow("CSC 205 A3",
     SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-    WINDOW_SIZE_X, WINDOW_SIZE_Y, 
+    window_size_x, window_size_y, 
 		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
 	);
 
