@@ -19,7 +19,7 @@ void process_image(PNG_Canvas_BW& image) {
 	int height = image.get_height();
 	
 	//Make a new image canvas for the output to avoid conflicts
-	PNG_Canvas_BW outputImage(width,height);
+	PNG_Canvas_BW outputImage(width, height);
 	
 	//Placeholder: invert the image
 	for (int x = 0; x < width; x++) {
@@ -27,7 +27,7 @@ void process_image(PNG_Canvas_BW& image) {
 			outputImage[x][y] = 255 - image[x][y];
 		}
 	}
-			
+
 	//Copy the result back into the provided image
 	image = outputImage;
 }
