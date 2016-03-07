@@ -14,14 +14,28 @@
 
 using namespace std;
 
-void process_image(PNG_Canvas_BW& image) {
+vector<int> compute_histogram(PNG_Canvas_BW& image) {
+	vector<int> h(256, 0);
+
 	int width = image.get_width();
 	int height = image.get_height();
 	
+	for (int x = 0; x < width; x++) {
+		for (int y = 0; y < height; y++) {
+			h[image[x][y]]++;
+		}
+	}
+
+	return h;
+}
+
+void invert_image(PNG_Canvas_BW& image) {
+	int width = image.get_width();
+	int height = image.get_height();
+
 	//Make a new image canvas for the output to avoid conflicts
 	PNG_Canvas_BW outputImage(width, height);
-	
-	//Placeholder: invert the image
+
 	for (int x = 0; x < width; x++) {
 		for (int y = 0; y < height; y++) {
 			outputImage[x][y] = 255 - image[x][y];
@@ -32,6 +46,22 @@ void process_image(PNG_Canvas_BW& image) {
 	image = outputImage;
 }
 
+void match_histogram(PNG_Canvas_BW& image, int Href[]) {
+	int width = image.get_width();
+	int height = image.get_height();
+	int n = width * height;
+	vector<int> h = compute_histogram(image);
+	
+	PNG_Canvas_BW outputImage(width, height);
+	
+	for (int x = 0; x < width; x++) {
+		for (int y = 0; y < height; y++) {
+			
+		}
+	}
+
+	image = outputImage;
+}
 
 int main(int argc, char** argv) {
 	if (argc < 3) {
@@ -47,6 +77,7 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 	
-	process_image(canvas);
+	vector<int> Href = compute_histogram(canvas);
+	// match_histogram(canvas, Href);
 	canvas.save_image(output_filename);
 }
