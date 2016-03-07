@@ -9,6 +9,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 #include "lodepng.h"
 #include "png_canvas.h"
 
@@ -27,6 +28,17 @@ vector<int> compute_histogram(PNG_Canvas_BW& image) {
 	}
 
 	return h;
+}
+
+vector<int> compute_cumulative_histogram(PNG_Canvas_BW& image) {
+	vector<int> h = compute_histogram(image);
+	vector<int> H = h;
+
+	for (int i = 1; i < h.size(); i++) {
+		H[i] = H[i-1] + h[i];
+	}
+
+	return H;
 }
 
 void invert_image(PNG_Canvas_BW& image) {
@@ -77,7 +89,7 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 	
-	vector<int> Href = compute_histogram(canvas);
+	vector<int> Href = compute_cumulative_histogram(canvas);
 	// match_histogram(canvas, Href);
 	canvas.save_image(output_filename);
 }
