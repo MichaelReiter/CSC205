@@ -21,7 +21,7 @@ double gaussian_pdf(double x, double mean = 128, double stddev = 50) {
 }
 
 
-vector<double> gaussian_cdf(double x, double mean = 128, double stddev = 50) {
+vector<double> gaussian_cdf(double mean = 128, double stddev = 50) {
 	vector<double> histogram(256);
 
 	for (int i = 0; i < histogram.size(); i++) {
@@ -37,12 +37,12 @@ vector<double> gaussian_cdf(double x, double mean = 128, double stddev = 50) {
 }
 
 
-vector<int> compute_histogram(PNG_Canvas_BW& image) {
-	vector<int> h(256, 0);
+vector<double> compute_histogram(PNG_Canvas_BW& image) {
+	vector<double> h(256, 0);
 
 	int width = image.get_width();
 	int height = image.get_height();
-	
+
 	for (int x = 0; x < width; x++) {
 		for (int y = 0; y < height; y++) {
 			h[image[x][y]]++;
@@ -53,13 +53,17 @@ vector<int> compute_histogram(PNG_Canvas_BW& image) {
 }
 
 
-vector<int> compute_cumulative_histogram(PNG_Canvas_BW& image) {
-	vector<int> h = compute_histogram(image);
-	vector<int> H = h;
+vector<double> compute_cumulative_histogram(PNG_Canvas_BW& image) {
+	vector<double> h = compute_histogram(image);
+	vector<double> H = h;
 
 	for (int i = 1; i < h.size(); i++) {
 		H[i] = H[i-1] + h[i];
 	}
+
+	int width = image.get_width();
+	int height = image.get_height();
+	int n = width * height;
 
 	return H;
 }
@@ -83,15 +87,15 @@ void invert_image(PNG_Canvas_BW& image) {
 }
 
 
-vector<int> match_histogram(PNG_Canvas_BW& image, vector<int> Href, int nref = 256) {
+vector<double> create_histogram_match_point_operation(PNG_Canvas_BW& image, vector<double> Href, int nref = 1) {
 	int width = image.get_width();
 	int height = image.get_height();
 
 	int n = width * height;
 	int r = n / nref;
-	vector<int> h = compute_histogram(image);
+	vector<double> h = compute_histogram(image);
 
-	vector<int> F(256, 0);
+	vector<double> F(256, 0);
 	int i = 0;
 	int j = 0;
 	int c = 0;
@@ -105,11 +109,24 @@ vector<int> match_histogram(PNG_Canvas_BW& image, vector<int> Href, int nref = 2
 			j++;
 		}
 	}
-	
-	// PNG_Canvas_BW outputImage(width, height);
-	// image = outputImage;
 
 	return F;
+}
+
+
+void apply_point_operation(PNG_Canvas_BW& image, vector<double> H) {
+	int width = image.get_width();
+	int height = image.get_height();
+
+	PNG_Canvas_BW outputImage(width, height);
+
+	for (int x = 0; x < width; x++) {
+		for (int y = 0; y < height; y++) {
+			outputImage[x][y] = H[image[x][y]];
+		}
+	}
+
+	image = outputImage;
 }
 
 
@@ -127,9 +144,11 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 	
-	// gaussian_cdf(0);
-	// cout << gaussian_pdf(0) << endl;
-	vector<int> Href = compute_cumulative_histogram(canvas);
-	match_histogram(canvas, Href);
+	vector<double> gaussian_dist  = gaussian_cdf();
+	vector<double> gaussian_point = create_histogram_match_point_operation(canvas, gaussian_dist);
+	apply_point_operation(canvas, gaussian_point);
+
+	vector<double> Href = compute_cumulative_histogram(canvas);
+
 	canvas.save_image(output_filename);
 }
