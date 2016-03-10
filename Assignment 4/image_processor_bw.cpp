@@ -159,8 +159,6 @@ int clamp(double intensity) {
 
 
 double sum_gauss(double stddev = 50) {
-  vector< vector<double> > matrix(5, vector<double>(5));
-
   double sum = 0;
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 5; j++) {
@@ -169,7 +167,6 @@ double sum_gauss(double stddev = 50) {
       sum += exp( -( (pow(x, 2.0) + pow(y, 2.0)) / (2*pow(stddev, 2.0)) ) );
     }
   }
-
   return sum;
 }
 
@@ -189,19 +186,19 @@ vector< vector<double> > compute_gaussian_blur_matrix(double stddev = 50) {
 }
 
 
-void apply_gaussian_blur(PNG_Canvas_BW& image) {
+void apply_filter(PNG_Canvas_BW& image, vector< vector<double> > filter) {
   int width = image.get_width();
   int height = image.get_height();
 
   PNG_Canvas_BW outputImage(width, height);
 
-  vector< vector<double> > blur_matrix = compute_gaussian_blur_matrix();
+  int filter_radius = filter.size()/2;
 
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
       double newPixel = 0;
-      for (int i = -2; i <= 2; i++) {
-        for (int j = -2; j <= 2; j++) {
+      for (int i = -filter_radius; i <= filter_radius; i++) {
+        for (int j = -filter_radius; j <= filter_radius; j++) {
           double value;
           if (x+i < 0) {
             value = image[0][y+i];
@@ -214,7 +211,7 @@ void apply_gaussian_blur(PNG_Canvas_BW& image) {
           } else {
             value = image[x+i][y+j];
           }
-          newPixel += (blur_matrix[i+2][j+2] * value);
+          newPixel += (filter[i+filter_radius][j+filter_radius] * value);
         }
       }
       outputImage[x][y] = clamp(newPixel);
@@ -238,8 +235,10 @@ int main(int argc, char** argv) {
     return 0;
   }
   
-  apply_gaussian_blur(canvas);
-  // vector<double> gaussian_dist  = inverse_gaussian_cdf();
+  vector< vector<double> > filter = compute_gaussian_blur_matrix();
+  apply_filter(canvas, filter);
+
+  // vector<double> gaussian_dist  = gaussian_cdf();
   // vector<double> gaussian_point = create_histogram_match_point_operation(canvas, gaussian_dist);
   // apply_point_operation(canvas, gaussian_point);
 
