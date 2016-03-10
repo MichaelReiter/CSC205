@@ -47,7 +47,7 @@ vector< vector<double> > compute_gaussian_blur_matrix(double stddev = 50) {
     for (int j = 0; j < 5; j++) {
       int x = j-2;
       int y = i-2;
-      matrix[i][j] = 1/sum_gauss() * exp( -( (pow(x, 2.0) + pow(y, 2.0)) / (2*pow(stddev, 2.0)) ) );
+      matrix[i][j] = 1/sum_gauss(stddev) * exp( -( (pow(x, 2.0) + pow(y, 2.0)) / (2*pow(stddev, 2.0)) ) );
     }
   }
 
@@ -104,7 +104,12 @@ int main(int argc, char** argv) {
     return 0;
   }
   
-  vector< vector<double> > filter = compute_gaussian_blur_matrix();
+  vector< vector<double> > filter;
+  if (argc > 3) {
+    filter = compute_gaussian_blur_matrix(atoi(argv[3]));
+  } else {
+    filter = compute_gaussian_blur_matrix();
+  }
   apply_filter(canvas, filter);
 
   canvas.save_image(output_filename);

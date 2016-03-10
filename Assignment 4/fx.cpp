@@ -37,23 +37,6 @@ vector<double> gaussian_cdf(double mean = 128, double stddev = 50) {
 }
 
 
-vector<double> inverse_gaussian_cdf(double mean = 128, double stddev = 50) {
-  vector<double> histogram(256);
-
-  for (int i = 0; i < histogram.size(); i++) {
-    histogram[i] = gaussian_pdf(mean, mean, stddev)-gaussian_pdf(i, mean, stddev);
-    // cout << histogram[i] << endl;
-  }
-
-  vector<double> cdf(256, 0);
-  for (int i = 1; i < cdf.size(); i++) {
-    cdf[i] = cdf[i-1] + histogram[i];
-  }
-
-  return cdf;
-}
-
-
 vector<double> compute_histogram(PNG_Canvas_BW& image) {
   vector<double> h(256, 0);
 
