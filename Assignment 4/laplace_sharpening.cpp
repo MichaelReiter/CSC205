@@ -1,4 +1,4 @@
-/* gaussian_blur.cpp
+/* leplace_sharpening.cpp
   CSC 205 - Spring 2016
    
   Grayscale PNG image processor.
@@ -27,7 +27,7 @@ int clamp(double intensity) {
 }
 
 
-vector< vector<double> > compute_matrix() {
+vector< vector<double> > compute_sharpening_matrix() {
   double array[3][3] = {{0, 1, 0}, {1, -4, 1}, {0, 1, 0}};
 
   vector< vector<double> > matrix(3, vector<double>(3));
@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
     return 0;
   }
 
-  vector< vector<double> > filter = compute_matrix();
+  vector< vector<double> > filter = compute_sharpening_matrix();
   if (argc > 3) {
     apply_filter(canvas, filter, atoi(argv[3]));
   } else {

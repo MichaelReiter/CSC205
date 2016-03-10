@@ -15,6 +15,9 @@ The value of w in the edge sharpening equation can be changed at run time by the
 8
 For all of the filtering programs, out-of-bounds pixels are handled with reflection or smearing (instead of assuming all out-of-bounds pixels have a constant value).
 
+6
+An additional Leplacian-of-Gaussian edge sharpening program is implemented and functions correctly.
+
 
 
 TODO
@@ -27,6 +30,3 @@ The program for histogram matching against the function g(x) given in Section 1.
 
 6
 A second Gaussian blur filter which uses separate 5 × 1 and 1 × 5 filters to perform the blur is implemented and functions correctly.
-
-6
-An additional Leplacian-of-Gaussian edge sharpening program is implemented and functions correctly.
