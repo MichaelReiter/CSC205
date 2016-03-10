@@ -1,4 +1,4 @@
-/* image_processor_bw.cpp
+/* fx.cpp
   CSC 205 - Spring 2016
    
   Grayscale PNG image processor.

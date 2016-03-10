@@ -1,4 +1,4 @@
-/* image_processor_bw.cpp
+/* gx.cpp
   CSC 205 - Spring 2016
    
   Grayscale PNG image processor.
@@ -18,22 +18,6 @@ using namespace std;
 
 double gaussian_pdf(double x, double mean = 128, double stddev = 50) {
   return (1.0 / (stddev * sqrt(2*M_PI))) * exp(-0.5 * pow((x - mean)/stddev, 2.0));
-}
-
-
-vector<double> gaussian_cdf(double mean = 128, double stddev = 50) {
-  vector<double> histogram(256);
-
-  for (int i = 0; i < histogram.size(); i++) {
-    histogram[i] = gaussian_pdf(i, mean, stddev);
-  }
-
-  vector<double> cdf(256, 0);
-  for (int i = 1; i < cdf.size(); i++) {
-    cdf[i] = cdf[i-1] + histogram[i];
-  }
-
-  return cdf;
 }
 
 
@@ -143,7 +127,7 @@ int main(int argc, char** argv) {
     return 0;
   }
   
-  vector<double> gaussian_cumulative_hist = gaussian_cdf();
+  vector<double> gaussian_cumulative_hist = inverse_gaussian_cdf();
   vector<double> gaussian_point_operation = create_histogram_match_point_operation(canvas, gaussian_cumulative_hist);
   apply_point_operation(canvas, gaussian_point_operation);
 

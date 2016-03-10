@@ -1,0 +1,1 @@
+clear && g++ -o A4 image_processor_bw.cpp lodepng.cpp && ./A4 pear.png output
