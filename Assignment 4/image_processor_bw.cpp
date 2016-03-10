@@ -158,6 +158,22 @@ int clamp(double intensity) {
 }
 
 
+double sum_gauss(double stddev = 50) {
+  vector< vector<double> > matrix(5, vector<double>(5));
+
+  double sum = 0;
+  for (int i = 0; i < 5; i++) {
+    for (int j = 0; j < 5; j++) {
+      int x = j-2;
+      int y = i-2;
+      sum += exp( -( (pow(x, 2.0) + pow(y, 2.0)) / (2*pow(stddev, 2.0)) ) );
+    }
+  }
+
+  return sum;
+}
+
+
 vector< vector<double> > compute_gaussian_blur_matrix(double stddev = 50) {
   vector< vector<double> > matrix(5, vector<double>(5));
 
@@ -165,7 +181,7 @@ vector< vector<double> > compute_gaussian_blur_matrix(double stddev = 50) {
     for (int j = 0; j < 5; j++) {
       int x = j-2;
       int y = i-2;
-      matrix[i][j] = exp( -( (pow(x, 2.0) + pow(y, 2.0)) / (2*pow(stddev, 2.0)) ) );
+      matrix[i][j] = 1/sum_gauss() * exp( -( (pow(x, 2.0) + pow(y, 2.0)) / (2*pow(stddev, 2.0)) ) );
     }
   }
 
@@ -179,28 +195,28 @@ void apply_gaussian_blur(PNG_Canvas_BW& image) {
 
   PNG_Canvas_BW outputImage(width, height);
 
-  vector< vector<double> > blur_matrix = compute_gaussian_blur_matrix(1);
+  vector< vector<double> > blur_matrix = compute_gaussian_blur_matrix();
 
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
-      
       double newPixel = 0;
-
-      for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 5; j++) {
-
+      for (int i = -2; i <= 2; i++) {
+        for (int j = -2; j <= 2; j++) {
           double value;
-          if (x-2 < 0 || y-2 < 0) {
-            value = 0;
+          if (x+i < 0) {
+            value = image[0][y+i];
+          } else if (y+j < 0) {
+            value = image[x+i][0];
+          } else if (x+i > width-1) {
+            value = image[width-1][y];
+          } else if (y+j > height-1) {
+            value = image[x][height-1];
           } else {
-            value = image[x-2][y-2];
+            value = image[x+i][y+j];
           }
-          newPixel += (blur_matrix[i][j] * value);
-
+          newPixel += (blur_matrix[i+2][j+2] * value);
         }
       }
-
-      cout << clamp(newPixel) << endl;
       outputImage[x][y] = clamp(newPixel);
     }
   }
@@ -223,7 +239,6 @@ int main(int argc, char** argv) {
   }
   
   apply_gaussian_blur(canvas);
-
   // vector<double> gaussian_dist  = inverse_gaussian_cdf();
   // vector<double> gaussian_point = create_histogram_match_point_operation(canvas, gaussian_dist);
   // apply_point_operation(canvas, gaussian_point);
