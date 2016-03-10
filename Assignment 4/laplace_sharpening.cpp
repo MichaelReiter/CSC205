@@ -27,14 +27,14 @@ int clamp(double intensity) {
 }
 
 
-vector< vector<double> > compute_matrix(double stddev = 50) {
-  vector< vector<double> > matrix(5, vector<double>(5));
+vector< vector<double> > compute_matrix() {
+  double array[3][3] = {{0, 1, 0}, {1, -4, 1}, {0, 1, 0}};
 
-  for (int i = 0; i < 5; i++) {
-    for (int j = 0; j < 5; j++) {
-      int x = j-2;
-      int y = i-2;
-      matrix[i][j] = 1/sum_gauss() * exp( -( (pow(x, 2.0) + pow(y, 2.0)) / (2*pow(stddev, 2.0)) ) );
+  vector< vector<double> > matrix(3, vector<double>(3));
+
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+      matrix[i][j] = array[i][j];
     }
   }
 
@@ -42,7 +42,7 @@ vector< vector<double> > compute_matrix(double stddev = 50) {
 }
 
 
-void apply_filter(PNG_Canvas_BW& image, vector< vector<double> > filter) {
+void apply_filter(PNG_Canvas_BW& image, vector< vector<double> > filter, double w = 1) {
   int width = image.get_width();
   int height = image.get_height();
 
@@ -70,7 +70,7 @@ void apply_filter(PNG_Canvas_BW& image, vector< vector<double> > filter) {
           newPixel += (filter[i+filter_radius][j+filter_radius] * value);
         }
       }
-      outputImage[x][y] = clamp(newPixel);
+      outputImage[x][y] = clamp(image[x][y] - w*clamp(newPixel));
     }
   }
   image = outputImage;
@@ -90,9 +90,13 @@ int main(int argc, char** argv) {
     cerr << "Unable to load " << input_filename << ". Exiting..." << endl;
     return 0;
   }
-  
+
   vector< vector<double> > filter = compute_matrix();
-  apply_filter(canvas, filter);
+  if (argc > 3) {
+    apply_filter(canvas, filter, atoi(argv[3]));
+  } else {
+    apply_filter(canvas, filter);
+  }  
 
   canvas.save_image(output_filename);
 }

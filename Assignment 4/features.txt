@@ -1,0 +1,32 @@
+DONE
+
+18
+The 5 × 5 Gaussian blur filter functions correctly on a variety of test inputs.
+
+2
+The value of σ for the Gaussian blur filter can be changed at run time by the user (for example, by providing it as a command line parameter).
+
+18
+The Laplace edge sharpening program functions correctly on a variety of test inputs.
+
+2
+The value of w in the edge sharpening equation can be changed at run time by the user (for example, by providing it as a command line parameter).
+
+8
+For all of the filtering programs, out-of-bounds pixels are handled with reflection or smearing (instead of assuming all out-of-bounds pixels have a constant value).
+
+
+
+TODO
+
+16
+The program for histogram matching against the function f(x) given in Section 1.1 functions correctly on a variety of test images.
+
+16
+The program for histogram matching against the function g(x) given in Section 1.1 functions correctly on a variety of test images.
+
+6
+A second Gaussian blur filter which uses separate 5 × 1 and 1 × 5 filters to perform the blur is implemented and functions correctly.
+
+6
+An additional Leplacian-of-Gaussian edge sharpening program is implemented and functions correctly.
