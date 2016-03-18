@@ -16,6 +16,17 @@
 
 using namespace std;
 
+int clamp(double intensity) {
+  if (intensity > 255) {
+    return 255;
+  } else if (intensity < 0) {
+    return 0;
+  } else {
+    return intensity;
+  }
+}
+
+
 double gaussian_pdf(double x, double mean = 128, double stddev = 50) {
   return (1.0 / (stddev * sqrt(2*M_PI))) * exp(-0.5 * pow((x - mean)/stddev, 2.0));
 }
@@ -61,10 +72,6 @@ vector<double> compute_cumulative_histogram(PNG_Canvas_BW& image) {
     H[i] = H[i-1] + h[i];
   }
 
-  int width = image.get_width();
-  int height = image.get_height();
-  int n = width * height;
-
   return H;
 }
 
@@ -96,7 +103,7 @@ vector<double> create_histogram_match_point_operation(PNG_Canvas_BW& image, vect
 }
 
 
-void apply_point_operation(PNG_Canvas_BW& image, vector<double> H) {
+void apply_point_operation(PNG_Canvas_BW& image, vector<double> f) {
   int width = image.get_width();
   int height = image.get_height();
 
@@ -104,11 +111,28 @@ void apply_point_operation(PNG_Canvas_BW& image, vector<double> H) {
 
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
-      outputImage[x][y] = H[image[x][y]];
+      // i = f(i)
+      outputImage[x][y] = clamp(f[image[x][y]]);
     }
   }
 
   image = outputImage;
+}
+
+
+void compare_hists(PNG_Canvas_BW& image) {
+  vector<double> image_hist = compute_cumulative_histogram(image);
+  vector<double> gauss_hist = gaussian_cdf();
+
+  int width = image.get_width();
+  int height = image.get_height();
+  int n = width * height;
+
+  for (int i = 0; i < gauss_hist.size(); i++) {
+    gauss_hist[i] *= n;
+    cout << image_hist[i] - gauss_hist[i] << endl;
+  }
+
 }
 
 
@@ -125,10 +149,16 @@ int main(int argc, char** argv) {
     cerr << "Unable to load " << input_filename << ". Exiting..." << endl;
     return 0;
   }
-  
-  vector<double> gaussian_cumulative_hist = gaussian_cdf();
-  vector<double> gaussian_point_operation = create_histogram_match_point_operation(canvas, gaussian_cumulative_hist);
-  apply_point_operation(canvas, gaussian_point_operation);
+
+  vector<double> gauss_hist = gaussian_cdf();
+  vector<double> point_operation = create_histogram_match_point_operation(canvas, gauss_hist);
+  apply_point_operation(canvas, point_operation);
+
+  // PNG_Canvas_BW output;
+  // output.load_image("gauss.png");
+  // compare_hists(output);
+
+  // compare_hists(canvas);
 
   canvas.save_image(output_filename);
 }
