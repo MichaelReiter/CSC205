@@ -1,9 +1,10 @@
 /* image_processor_bw.cpp
-   CSC 205 - Spring 2016
+  CSC 205 - Spring 2016
    
-   Template for a grayscale PNG image processor.
+  Template for a grayscale PNG image processor.
    
-   B. Bird - 03/02/2016
+  B. Bird - 03/02/2016
+  Michael Reiter - 03/21/2016
 */
 
 #include <string>
@@ -13,9 +14,7 @@
 
 using namespace std;
 
-
-
-void process_image(PNG_Canvas_BW& image){
+void process_image(PNG_Canvas_BW& image) {
 	int width = image.get_width();
 	int height = image.get_height();
 	
@@ -23,19 +22,19 @@ void process_image(PNG_Canvas_BW& image){
 	PNG_Canvas_BW outputImage(width,height);
 	
 	//Placeholder: invert the image
-	for (int x = 0; x < width; x++)
-		for (int y = 0; y < height; y++)
+	for (int x = 0; x < width; x++) {
+		for (int y = 0; y < height; y++) {
 			outputImage[x][y] = 255 - image[x][y];
-			
-			
+		}
+	}
+	
 	//Copy the result back into the provided image
 	image = outputImage;
 }
 
 
-
-int main(int argc, char** argv){
-	if (argc < 3){
+int main(int argc, char** argv) {
+	if (argc < 3) {
 		cerr << "Usage: " << argv[0] << " <input file> <output file>" << endl;
 		return 0;
 	}
@@ -43,13 +42,11 @@ int main(int argc, char** argv){
 	string output_filename = argv[2];
 	
 	PNG_Canvas_BW canvas;
-	if (!canvas.load_image(input_filename)){
+	if (!canvas.load_image(input_filename)) {
 		cerr << "Unable to load " << input_filename << ". Exiting..." << endl;
 		return 0;
 	}
 	
 	process_image(canvas);
 	canvas.save_image(output_filename);
-	
-	
 }
