@@ -1,8 +1,8 @@
 /* image_processor_bw.cpp
   CSC 205 - Spring 2016
    
-  Template for a grayscale PNG image processor.
-   
+  A grayscale PNG image processor.
+  
   B. Bird - 03/02/2016
   Michael Reiter - 03/21/2016
 */
