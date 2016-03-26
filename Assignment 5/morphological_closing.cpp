@@ -14,7 +14,6 @@
 
 using namespace std;
 
-
 void convert_to_binary(PNG_Canvas_BW& image) {
   int width = image.get_width();
   int height = image.get_height();
