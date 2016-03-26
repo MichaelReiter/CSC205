@@ -75,21 +75,23 @@ void morphological_closing(PNG_Canvas_BW& image) {
   // Iterate over all pixels applying dilation
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
-      if (image[x-1][y]   == 0 ||
-          image[x-2][y]   == 0 ||
-          image[x+1][y]   == 0 ||
-          image[x+2][y]   == 0 ||
-          image[x][y-1]   == 0 ||
-          image[x][y-2]   == 0 ||
-          image[x][y+1]   == 0 ||
-          image[x][y+2]   == 0 ||
-          image[x+1][y+1] == 0 ||
-          image[x-1][y+1] == 0 ||
-          image[x+1][y-1] == 0 ||
-          image[x-1][y-1] == 0) {
-        dilatedImage[x][y] = 0;
-      } else {
-        dilatedImage[x][y] = 255;
+      if (x-2 >= 0 && y-2 >= 0 && x+2 < width && y+2 < height) {
+        if (image[x-1][y]   == 0 ||
+            image[x-2][y]   == 0 ||
+            image[x+1][y]   == 0 ||
+            image[x+2][y]   == 0 ||
+            image[x][y-1]   == 0 ||
+            image[x][y-2]   == 0 ||
+            image[x][y+1]   == 0 ||
+            image[x][y+2]   == 0 ||
+            image[x+1][y+1] == 0 ||
+            image[x-1][y+1] == 0 ||
+            image[x+1][y-1] == 0 ||
+            image[x-1][y-1] == 0) {
+          dilatedImage[x][y] = 0;
+        } else {
+          dilatedImage[x][y] = 255;
+        }
       }
     }
   }
@@ -97,21 +99,25 @@ void morphological_closing(PNG_Canvas_BW& image) {
   // Iterate over all pixels applying erosion
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
-      if (dilatedImage[x-1][y]   == 0 &&
-          dilatedImage[x-2][y]   == 0 &&
-          dilatedImage[x+1][y]   == 0 &&
-          dilatedImage[x+2][y]   == 0 &&
-          dilatedImage[x][y-1]   == 0 &&
-          dilatedImage[x][y-2]   == 0 &&
-          dilatedImage[x][y+1]   == 0 &&
-          dilatedImage[x][y+2]   == 0 &&
-          dilatedImage[x+1][y+1] == 0 &&
-          dilatedImage[x-1][y+1] == 0 &&
-          dilatedImage[x+1][y-1] == 0 &&
-          dilatedImage[x-1][y-1] == 0) {
-        outputImage[x][y] = 0;
+      if (x-2 >= 0 && y-2 >= 0 && x+2 < width && y+2 < height) {
+        if (dilatedImage[x-1][y]   == 0 &&
+            dilatedImage[x-2][y]   == 0 &&
+            dilatedImage[x+1][y]   == 0 &&
+            dilatedImage[x+2][y]   == 0 &&
+            dilatedImage[x][y-1]   == 0 &&
+            dilatedImage[x][y-2]   == 0 &&
+            dilatedImage[x][y+1]   == 0 &&
+            dilatedImage[x][y+2]   == 0 &&
+            dilatedImage[x+1][y+1] == 0 &&
+            dilatedImage[x-1][y+1] == 0 &&
+            dilatedImage[x+1][y-1] == 0 &&
+            dilatedImage[x-1][y-1] == 0) {
+          outputImage[x][y] = 0;
+        } else {
+          outputImage[x][y] = 255;
+        }
       } else {
-        outputImage[x][y] = 255;
+        outputImage[x][y] = image[x][y];
       }
     }
   }
