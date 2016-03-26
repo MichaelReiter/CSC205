@@ -1,7 +1,7 @@
-/* image_processor_bw.cpp
+/* morphological_closing.cpp
   CSC 205 - Spring 2016
    
-  A grayscale PNG image processor.
+  A PNG image processor.
   
   B. Bird - 03/02/2016
   Michael Reiter - 03/21/2016
@@ -15,53 +15,23 @@
 using namespace std;
 
 
-int clamp(double intensity) {
-  if (intensity > 255) {
-    return 255;
-  } else if (intensity < 0) {
-    return 0;
-  } else {
-    return intensity;
-  }
-}
-
-
-void process_image(PNG_Canvas_BW& image) {
-  int width = image.get_width();
-  int height = image.get_height();
-  
-  // Make a new image canvas for the output to avoid conflicts
-  PNG_Canvas_BW outputImage(width,height);
-  
-  // Invert the image
-  for (int x = 0; x < width; x++) {
-    for (int y = 0; y < height; y++) {
-      outputImage[x][y] = 255 - image[x][y];
-    }
-  }
-  
-  // Copy the result back into the provided image
-  image = outputImage;
-}
-
-
 void convert_to_binary(PNG_Canvas_BW& image) {
   int width = image.get_width();
   int height = image.get_height();
 
-  PNG_Canvas_BW outputImage(width,height);
+  PNG_Canvas_BW output_image(width,height);
   
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
       if (image[x][y] < 128) {
-        outputImage[x][y] = 0;    // black
+        output_image[x][y] = 0;    // black
       } else {
-        outputImage[x][y] = 255;  // white
+        output_image[x][y] = 255;  // white
       }
     }
   }
 
-  image = outputImage;
+  image = output_image;
 }
 
 
@@ -70,7 +40,7 @@ void morphological_closing(PNG_Canvas_BW& image) {
   int height = image.get_height();
 
   PNG_Canvas_BW dilatedImage(width, height);
-  PNG_Canvas_BW outputImage(width, height);
+  PNG_Canvas_BW output_image(width, height);
 
   // Iterate over all pixels applying dilation
   for (int x = 0; x < width; x++) {
@@ -112,22 +82,17 @@ void morphological_closing(PNG_Canvas_BW& image) {
             dilatedImage[x-1][y+1] == 0 &&
             dilatedImage[x+1][y-1] == 0 &&
             dilatedImage[x-1][y-1] == 0) {
-          outputImage[x][y] = 0;
+          output_image[x][y] = 0;
         } else {
-          outputImage[x][y] = 255;
+          output_image[x][y] = 255;
         }
       } else {
-        outputImage[x][y] = image[x][y];
+        output_image[x][y] = image[x][y];
       }
     }
   }
 
-  image = outputImage;
-}
-
-
-void scale_image() {
-
+  image = output_image;
 }
 
 
