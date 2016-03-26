@@ -58,7 +58,12 @@ int main(int argc, char** argv) {
     cerr << "Unable to load " << input_filename << ". Exiting..." << endl;
     return 0;
   }
-  
-  scale_image(canvas);
+
+  if (argc > 3) {
+    scale_image(canvas, atof(argv[3]));
+  } else {
+    scale_image(canvas);
+  }
+
   canvas.save_image(output_filename);
 }
