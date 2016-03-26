@@ -66,58 +66,52 @@ void convert_to_binary(PNG_Canvas_BW& image) {
 
 
 void morphological_closing(PNG_Canvas_BW& image) {
-  // bool h[5][5] = {
-  //   {false, false,  true, false, false},
-  //   {false,  true,  true,  true, false},
-  //   { true,  true, false,  true,  true},
-  //   {false,  true,  true,  true, false},
-  //   {false, false,  true, false, false}
-  // };
-
-  bool h[3][3] = {
-    {false, true, false},
-    { true, true,  true},
-    {false, true, false}
-  };
-
   int width = image.get_width();
   int height = image.get_height();
 
+  PNG_Canvas_BW dilatedImage(width, height);
   PNG_Canvas_BW outputImage(width, height);
 
-  int radius = 1;
-
+  // Iterate over all pixels applying dilation
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
-      outputImage[x][y] = image[x][y];
+      if (image[x-1][y]   == 0 ||
+          image[x-2][y]   == 0 ||
+          image[x+1][y]   == 0 ||
+          image[x+2][y]   == 0 ||
+          image[x][y-1]   == 0 ||
+          image[x][y-2]   == 0 ||
+          image[x][y+1]   == 0 ||
+          image[x][y+2]   == 0 ||
+          image[x+1][y+1] == 0 ||
+          image[x-1][y+1] == 0 ||
+          image[x+1][y-1] == 0 ||
+          image[x-1][y-1] == 0) {
+        dilatedImage[x][y] = 0;
+      } else {
+        dilatedImage[x][y] = 255;
+      }
     }
   }
 
   // Iterate over all pixels applying erosion
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
-
-      bool should_break = false;
-
-      for (int i = -radius; i <= radius; i++) {
-        if (should_break) {
-          break;
-        }
-
-        for (int j = -radius; j <= radius; j++) {
-          // if (x+i >= 0 && x+i < width && y+j >= 0 && y+j < height) {
-            
-            if (h[x+i][y+j] && image[x+i][y+j] != 255) {
-              should_break = true;
-              break;
-            }
-
-          // }
-        }
-      }
-
-      if (!should_break) {
+      if (dilatedImage[x-1][y]   == 0 &&
+          dilatedImage[x-2][y]   == 0 &&
+          dilatedImage[x+1][y]   == 0 &&
+          dilatedImage[x+2][y]   == 0 &&
+          dilatedImage[x][y-1]   == 0 &&
+          dilatedImage[x][y-2]   == 0 &&
+          dilatedImage[x][y+1]   == 0 &&
+          dilatedImage[x][y+2]   == 0 &&
+          dilatedImage[x+1][y+1] == 0 &&
+          dilatedImage[x-1][y+1] == 0 &&
+          dilatedImage[x+1][y-1] == 0 &&
+          dilatedImage[x-1][y-1] == 0) {
         outputImage[x][y] = 0;
+      } else {
+        outputImage[x][y] = 255;
       }
     }
   }
