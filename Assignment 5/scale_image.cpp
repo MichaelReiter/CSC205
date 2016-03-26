@@ -25,8 +25,8 @@ void scale_image(PNG_Canvas_BW& image, float scale = 3) {
 
   for (int x = 0; x < scaled_width; x++) {
     for (int y = 0; y < scaled_height; y++) {
-      float x_prime = x * (float)width / (float)scaled_width;
-      float y_prime = y * (float)height / (float)scaled_height;
+      float x_prime = x * width / scaled_width;
+      float y_prime = y * height / scaled_height;
 
       int x0 = floor(x_prime);
       int y0 = floor(y_prime);
@@ -37,7 +37,7 @@ void scale_image(PNG_Canvas_BW& image, float scale = 3) {
       float p0 = image[x0][y0] * (1 - xs) + image[x1][y0] * xs;
       float p1 = image[x0][y1] * (1 - xs) + image[x1][y1] * xs;
 
-      scaled_image[x_prime][y_prime] = p0 * (1 - ys) + p1 * ys;
+      scaled_image[x][y] = p0 * (1 - ys) + p1 * ys;
     }
   }
 
