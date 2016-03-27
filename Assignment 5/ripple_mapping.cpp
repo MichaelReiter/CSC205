@@ -39,7 +39,7 @@ int check_bounds(int x, int boundary) {
 }
 
 
-void apply_ripple(PNG_Canvas_BW& image, float scale = 3) {
+void apply_ripple(PNG_Canvas_BW& image, double scale = 3) {
   int width = image.get_width();
   int height = image.get_height();
 
@@ -57,10 +57,10 @@ void apply_ripple(PNG_Canvas_BW& image, float scale = 3) {
       int y0 = floor(y_prime);
       int x1 = ceil(x_prime);
       int y1 = ceil(y_prime);
-      float xs = x_prime - x0;
-      float ys = y_prime - y0;
-      float p0 = image[x0][y0] * (1 - xs) + image[x1][y0] * xs;
-      float p1 = image[x0][y1] * (1 - xs) + image[x1][y1] * xs;
+      double xs = x_prime - x0;
+      double ys = y_prime - y0;
+      double p0 = image[x0][y0] * (1 - xs) + image[x1][y0] * xs;
+      double p1 = image[x0][y1] * (1 - xs) + image[x1][y1] * xs;
 
       output_image[x][y] = p0 * (1 - ys) + p1 * ys;
     }

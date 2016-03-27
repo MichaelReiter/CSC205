@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void scale_image(PNG_Canvas_BW& image, float scale = 3) {
+void scale_image(PNG_Canvas_BW& image, double scale = 3) {
   int width = image.get_width();
   int height = image.get_height();
 
@@ -25,17 +25,17 @@ void scale_image(PNG_Canvas_BW& image, float scale = 3) {
 
   for (int x = 0; x < scaled_width; x++) {
     for (int y = 0; y < scaled_height; y++) {
-      float x_prime = x * (float)width / (float)scaled_width;
-      float y_prime = y * (float)height / (float)scaled_height;
+      double x_prime = x * (double)width / (double)scaled_width;
+      double y_prime = y * (double)height / (double)scaled_height;
 
       int x0 = floor(x_prime);
       int y0 = floor(y_prime);
       int x1 = ceil(x_prime);
       int y1 = ceil(y_prime);
-      float xs = x_prime - x0;
-      float ys = y_prime - y0;
-      float p0 = image[x0][y0] * (1 - xs) + image[x1][y0] * xs;
-      float p1 = image[x0][y1] * (1 - xs) + image[x1][y1] * xs;
+      double xs = x_prime - x0;
+      double ys = y_prime - y0;
+      double p0 = image[x0][y0] * (1 - xs) + image[x1][y0] * xs;
+      double p1 = image[x0][y1] * (1 - xs) + image[x1][y1] * xs;
 
       scaled_image[x][y] = p0 * (1 - ys) + p1 * ys;
     }
